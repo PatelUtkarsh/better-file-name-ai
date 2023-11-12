@@ -14,7 +14,7 @@ class Openai_Wrapper {
 	public function get_renamed_filename( $path ): string {
 
 		if ( ! $this->openai_api_key ) {
-			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name' ) );
 		}
 
 		$image_url = $this->base64( $path );
@@ -27,7 +27,7 @@ class Openai_Wrapper {
 					'content' => [
 						[
 							'type' => 'text',
-							'text' => __( 'What would a good, short, dash separator filename be for this image? Only reply with the filename.', 'better-file-name-ai' ),
+							'text' => __( 'What would a good, short, dash separator filename be for this image? Only reply with the filename.', 'better-file-name' ),
 						],
 						[
 							'type'      => 'image_url',
@@ -58,7 +58,7 @@ class Openai_Wrapper {
 		}
 
 		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {
-			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name' ) );
 		}
 
 		$response = wp_remote_retrieve_body( $request );
@@ -67,7 +67,7 @@ class Openai_Wrapper {
 		if ( $result && isset( $result['choices'][0]['message']['content'] ) ) {
 			return $result['choices'][0]['message']['content'];
 		} else {
-			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name' ) );
 		}
 	}
 
@@ -79,7 +79,7 @@ class Openai_Wrapper {
 		finfo_close( $finfo );
 
 		if ( strpos( $type, 'image/' ) !== 0 ) {
-			throw new \Exception( esc_html__( 'File is not an image', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'File is not an image', 'better-file-name' ) );
 		}
 
 		return "data:$type;base64," . $base64_data;

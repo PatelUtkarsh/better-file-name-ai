@@ -25,7 +25,7 @@ class Settings {
 	public function add_settings_page(): void {
 		add_submenu_page(
 			'tools.php',
-			__( 'Better File Name Settings', 'better-file-name-ai' ),
+			__( 'Better File Name Settings', 'better-file-name' ),
 			'Better File Name',
 			'manage_options',
 			'better-file-name-settings',
@@ -39,7 +39,7 @@ class Settings {
 	public function settings_page_content(): void {
 		?>
 		<div class="wrap">
-			<h2><?php esc_html_e( 'Better File Name', 'better-file-name-ai' ); ?></h2>
+			<h2><?php esc_html_e( 'Better File Name', 'better-file-name' ); ?></h2>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'better_file_name_settings_group' ); ?>
 				<?php do_settings_sections( 'better_file_name_settings' ); ?>
@@ -53,10 +53,10 @@ class Settings {
 		register_setting( 'better_file_name_settings_group', self::RENAME_NEW_FILE, 'intval' );
 		register_setting( 'better_file_name_settings_group', self::OPENAI_API_KEY, 'sanitize_text_field' );
 		$section = 'better_file_name_section';
-		add_settings_section( $section, esc_html__( 'Media', 'better-file-name-ai' ), '__return_empty_string', 'better_file_name_settings' );
+		add_settings_section( $section, esc_html__( 'Media', 'better-file-name' ), '__return_empty_string', 'better_file_name_settings' );
 		add_settings_field(
 			self::RENAME_NEW_FILE,
-			esc_html__( 'Rename New File', 'better-file-name-ai' ),
+			esc_html__( 'Rename New File', 'better-file-name' ),
 			[
 				$this,
 				'rename_new_file_callback',
@@ -66,7 +66,7 @@ class Settings {
 		);
 		add_settings_field(
 			self::OPENAI_API_KEY,
-			esc_html__( 'OpenAI API Key', 'better-file-name-ai' ),
+			esc_html__( 'OpenAI API Key', 'better-file-name' ),
 			[
 				$this,
 				'better_file_name_api_key_callback',
