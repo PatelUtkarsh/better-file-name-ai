@@ -22,6 +22,11 @@ class Admin {
 		try {
 			$new_filename = $wrapper->get_renamed_filename( $path );
 			if ( $new_filename ) {
+				// Amend extension to new file name from original file name if it doesn't exists in new filename.
+				$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
+				if ( ! str_contains( $new_filename, $extension ) ) {
+					$new_filename .= '.' . $extension;
+				}
 				$file['name'] = $new_filename;
 			}
 		} catch ( \Exception $e ) {
