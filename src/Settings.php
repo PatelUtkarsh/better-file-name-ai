@@ -15,7 +15,7 @@ class Settings {
 
 	public function __construct() {
 
-		$this->should_rename_file = get_option( self::RENAME_NEW_FILE, 1 );
+		$this->should_rename_file = (bool) get_option( self::RENAME_NEW_FILE, 1 );
 		$this->openai_api_key     = get_option( self::OPENAI_API_KEY, '' );
 
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
@@ -77,7 +77,7 @@ class Settings {
 	}
 
 	public function rename_new_file_callback(): void {
-		echo '<input type="checkbox" name="rename_new_file" value="1" ' . checked( $this->get_rename_file(), 1, false ) . ' />';
+		echo '<input type="checkbox" name="rename_new_file" value="1" ' . checked( $this->get_rename_file(), true, false ) . ' />';
 	}
 
 	public function better_file_name_api_key_callback(): void {
