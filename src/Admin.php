@@ -16,16 +16,16 @@ class Admin {
 	}
 
 	public function rename_new_file( array $file ) {
-		$filename = $file['name'];
-		$path     = $file['tmp_name'];
+		$path = $file['tmp_name'];
 
 		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
 		try {
-			$new_filename = $wrapper->get_renamed_filename( $filename, $path );
+			$new_filename = $wrapper->get_renamed_filename( $path );
 			if ( $new_filename ) {
 				$file['name'] = $new_filename;
 			}
-		} catch ( \Exception $e ) {
+		}
+		catch ( \Exception $e ) {
 			error_log( $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 

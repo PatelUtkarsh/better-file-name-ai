@@ -3,8 +3,6 @@ declare( strict_types=1 );
 
 namespace Better_File_Name_Ai;
 
-use OpenAI;
-
 class Openai_Wrapper {
 
 	private string $openai_api_key;
@@ -13,7 +11,7 @@ class Openai_Wrapper {
 		$this->openai_api_key = $openai_api_key;
 	}
 
-	public function get_renamed_filename( $file_name, $path ): string {
+	public function get_renamed_filename( $path ): string {
 
 		if ( ! $this->openai_api_key ) {
 			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name-ai' ) );
@@ -21,32 +19,48 @@ class Openai_Wrapper {
 
 		$image_url = $this->base64( $path );
 
-		$client = OpenAI::client( $this->openai_api_key );
-
-		$result = $client->chat()->create(
-			[
-				'model'    => 'gpt-4-vision-preview',
-				'messages' => [
-					[
-						'role'    => 'user',
-						'content' => [
-							[
-								'type' => 'text',
-								'text' => __( 'What would a good, short, dash separator filename with be for this image? Only reply with the filename.', 'better-file-name-ai' ),
-							],
-							[
-								'type'      => 'image_url',
-								'image_url' => [ 'url' => $image_url ],
-							],
+		$data = [
+			'model'    => 'gpt-4-vision-preview',
+			'messages' => [
+				[
+					'role'    => 'user',
+					'content' => [
+						[
+							'type' => 'text',
+							'text' => __( 'What would a good, short, dash separator filename be for this image? Only reply with the filename.', 'better-file-name-ai' ),
+						],
+						[
+							'type'      => 'image_url',
+							'image_url' => [ 'url' => $image_url ],
 						],
 					],
 				],
-			]
-		);
+			],
+		];
 
-		$result = $result->toArray();
+		$headers = [
+			'Authorization' => 'Bearer ' . $this->openai_api_key,
+			'Content-Type'  => 'application/json',
+		];
 
-		return $result['choices'][0]['message']['content'] ?? false;
+		$request = wp_remote_request( 'https://api.openai.com/v1/chat/completions', [
+			'method'  => 'POST',
+			'headers' => $headers,
+			'body'    => json_encode( $data ),
+		] );
+
+		if ( is_wp_error( $request ) ) {
+			throw new \Exception( $request->get_error_messages() );
+		}
+
+		$response = wp_remote_retrieve_body( $request );
+		$result   = json_decode( $response, true );
+
+		if ( $result && isset( $result['choices'][0]['message']['content'] ) ) {
+			return $result['choices'][0]['message']['content'];
+		} else {
+			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name-ai' ) );
+		}
 	}
 
 	private function base64( $filename ): string {
