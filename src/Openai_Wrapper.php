@@ -50,7 +50,7 @@ class Openai_Wrapper {
 	}
 
 	private function base64( $filename ): string {
-		$data        = file_get_contents( $filename ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.file_get_contents_file_get_contents
+		$data        = file_get_contents( $filename ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		$base64_data = base64_encode( $data ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		$finfo       = finfo_open( FILEINFO_MIME_TYPE );
 		$type        = finfo_file( $finfo, $filename );
