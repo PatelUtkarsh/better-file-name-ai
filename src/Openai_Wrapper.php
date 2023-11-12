@@ -52,8 +52,12 @@ class Openai_Wrapper {
 			]
 		);
 
-		if ( is_wp_error( $request ) ) {
-			throw new \Exception( $request->get_error_messages() );
+		if ( $request instanceof \WP_Error ) {
+			throw new \Exception( esc_html( $request->get_error_messages() ) );
+		}
+
+		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {
+			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name-ai' ) );
 		}
 
 		$response = wp_remote_retrieve_body( $request );
