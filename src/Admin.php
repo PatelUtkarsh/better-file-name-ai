@@ -24,8 +24,7 @@ class Admin {
 			if ( $new_filename ) {
 				$file['name'] = $new_filename;
 			}
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 

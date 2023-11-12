@@ -43,11 +43,14 @@ class Openai_Wrapper {
 			'Content-Type'  => 'application/json',
 		];
 
-		$request = wp_remote_request( 'https://api.openai.com/v1/chat/completions', [
-			'method'  => 'POST',
-			'headers' => $headers,
-			'body'    => json_encode( $data ),
-		] );
+		$request = wp_remote_request(
+			'https://api.openai.com/v1/chat/completions',
+			[
+				'method'  => 'POST',
+				'headers' => $headers,
+				'body'    => wp_json_encode( $data ),
+			]
+		);
 
 		if ( is_wp_error( $request ) ) {
 			throw new \Exception( $request->get_error_messages() );
