@@ -13,6 +13,11 @@ Simple plugin that renames file using open api (gpt-4-vision) when uploaded to W
 
 == Installation ==
 
-1. Download zip file from GitHub.
-2. Upload the plugin folder to the `/wp-content/plugins/` directory.
-3. Activate the plugin through the 'Plugins' menu in WordPress. 
+1. Download zip file from GitHub release.
+2. Upload the plugin folder to the `/wp-content/plugins/` directory or upload the zip file from WordPress admin panel.
+3. Activate the plugin through the 'Plugins' menu in WordPress.
+4. Setup open api key from settings page from under tools menu. `/wp-admin/tools.php?page=better-file-name-settings`
+
+== Frequently Asked Questions ==
+= How to get openapi key? =
+Sign up for [open api](https://openai.com/) and get generate key from [here](https://platform.openai.com/account/api-keys).
