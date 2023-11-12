@@ -32,7 +32,7 @@ class Openai_Wrapper {
 						'content' => [
 							[
 								'type' => 'text',
-								'text' => __( 'What would a good, short, filename be for this image? Only reply with the filename.', 'better-file-name-ai' ),
+								'text' => __( 'What would a good, short, dash separator filename with be for this image? Only reply with the filename.', 'better-file-name-ai' ),
 							],
 							[
 								'type'      => 'image_url',
