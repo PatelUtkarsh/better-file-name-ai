@@ -39,7 +39,7 @@ class Settings {
 	public function settings_page_content(): void {
 		?>
 		<div class="wrap">
-			<h2><?php esc_html_e( 'Better File Name (using openai)', 'better-file-name-ai' ); ?></h2>
+			<h2><?php esc_html_e( 'Better File Name', 'better-file-name-ai' ); ?></h2>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'better_file_name_settings_group' ); ?>
 				<?php do_settings_sections( 'better_file_name_settings' ); ?>
