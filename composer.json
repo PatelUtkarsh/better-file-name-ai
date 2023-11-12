@@ -12,11 +12,6 @@
       "email": "itismeutkarsh@gmail.com"
     }
   ],
-  "require": {
-    "openai-php/client": "^0.7.8",
-    "symfony/http-client": "^6.3",
-    "nyholm/psr7": "^1.8"
-  },
   "config": {
     "allow-plugins": {
       "php-http/discovery": true,
