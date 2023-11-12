@@ -1,0 +1,34 @@
+{
+  "name": "patelutkarsh/better-file-name-ai",
+  "license": "GPLv2",
+  "autoload": {
+    "psr-4": {
+      "Better_File_Name_Ai\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Utkarsh Patel",
+      "email": "itismeutkarsh@gmail.com"
+    }
+  ],
+  "require": {
+    "openai-php/client": "^0.7.8",
+    "symfony/http-client": "^6.3",
+    "nyholm/psr7": "^1.8"
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.0",
+    "phpcompatibility/phpcompatibility-wp": "*"
+  },
+  "scripts": {
+    "lint": "phpcs --standard=.phpcs.xml.dist",
+    "format": "phpcbf --standard=.phpcs.xml.dist"
+  }
+}
