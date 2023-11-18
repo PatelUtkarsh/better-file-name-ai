@@ -31,6 +31,9 @@ class Openai_Wrapper {
 		}
 
 		if ( ! str_starts_with( $path, 'http' ) ) {
+			if ( ! file_exists( $path ) ) {
+				throw new \Exception( esc_html__( 'File does not exist', 'better-file-name' ) );
+			}
 			$image_url = $this->base64( $path );
 		} else {
 			$image_url = $path;
