@@ -1,8 +1,8 @@
-# Better File Name Ai
+# Better File Name
 
 ## Description
 
-This WordPress plugin automatically renames files using an open API (gpt-4-vision) upon upload and generates alt text for images.
+This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images.
 
 ## Installation
 
