@@ -16,7 +16,12 @@ class Openai_Wrapper {
 	}
 
 	public function get_alt_text( string $path ): string {
-		return $this->request( $path, __( 'Please provide the alt text for this image, ensuring it describes the content comprehensively for individuals who cannot see it. Only reply output.', 'better-file-name' ) );
+		$text = $this->request( $path, __( 'Please provide the alt text for this image, ensuring it describes the content comprehensively for individuals who cannot see it. Only reply output.', 'better-file-name' ) );
+		if ( str_starts_with( $text, 'Alt text: ' ) ) {
+			return str_replace( 'Alt text: ', '', $text );
+		}
+
+		return $text;
 	}
 
 	public function request( string $path, string $prompt ): string {
@@ -25,7 +30,11 @@ class Openai_Wrapper {
 			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name' ) );
 		}
 
-		$image_url = $this->base64( $path );
+		if ( ! str_starts_with( $path, 'http' ) ) {
+			$image_url = $this->base64( $path );
+		} else {
+			$image_url = $path;
+		}
 
 		$data = [
 			'model'    => 'gpt-4-vision-preview',

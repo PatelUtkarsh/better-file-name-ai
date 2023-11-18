@@ -62,9 +62,6 @@ class Admin {
 		try {
 			$new_alt_text = $wrapper->get_alt_text( $file );
 			if ( $new_alt_text ) {
-				if ( str_starts_with( $new_alt_text, 'Alt text: ' ) ) {
-					$new_alt_text = str_replace( 'Alt text: ', '', $new_alt_text );
-				}
 				update_post_meta( $post_id, '_wp_attachment_image_alt', $new_alt_text );
 			}
 		} catch ( \Exception $e ) {
