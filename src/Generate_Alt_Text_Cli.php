@@ -15,8 +15,8 @@ class Generate_Alt_Text_Cli {
 	 * [--dry-run]
 	 * : Perform a dry run without making any actual changes.
 	 *
-	 * [--use=url|data]
-	 * : While sending request to API, use url or data to generate alt text. Use url only if file is accessible via url.
+	 * [--use=<url|data>]
+	 * : While sending request to API, use `url` or `data` to generate alt text. Use url only if file is accessible via url.
 	 * If environment is production it defaults to url else data.
 	 *
 	 * ## EXAMPLES
