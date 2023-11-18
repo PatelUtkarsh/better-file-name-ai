@@ -21,3 +21,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $better_file_name_settings = new Settings();
 $better_file_name_admin    = new Admin( $better_file_name_settings );
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	\WP_CLI::add_command( 'better-file-name generate-alt-text', Better_File_Name_Ai\Generate_Alt_Text_Cli::class );
+}

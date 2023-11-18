@@ -68,7 +68,10 @@ class Settings {
 				'rename_new_file_callback',
 			],
 			'better_file_name_settings',
-			$section
+			$section,
+			[
+				'label_for' => self::RENAME_NEW_FILE,
+			]
 		);
 		add_settings_field(
 			self::ALT_TEXT,
@@ -78,8 +81,13 @@ class Settings {
 				'generate_alt_text_callback',
 			],
 			'better_file_name_settings',
-			$section
+			$section,
+			[
+				'label_for' => self::ALT_TEXT,
+			]
 		);
+		$section_api = 'better_file_name_section_api';
+		add_settings_section( $section_api, esc_html__( 'API', 'better-file-name' ), '__return_empty_string', 'better_file_name_settings' );
 		add_settings_field(
 			self::OPENAI_API_KEY,
 			esc_html__( 'OpenAI API Key', 'better-file-name' ),
@@ -88,16 +96,19 @@ class Settings {
 				'better_file_name_api_key_callback',
 			],
 			'better_file_name_settings',
-			$section
+			$section_api,
+			[
+				'label_for' => self::OPENAI_API_KEY,
+			]
 		);
 	}
 
 	public function rename_new_file_callback(): void {
-		echo '<input type="checkbox" name="rename_new_file" value="1" ' . checked( $this->get_rename_file(), true, false ) . ' />';
+		printf( '<input type="checkbox" id="%1$s" name="%1$s" value="1" %2$s />', self::RENAME_NEW_FILE, checked( $this->get_rename_file(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	public function better_file_name_api_key_callback(): void {
-		echo '<input type="text" name="better_file_name_api_key" value="' . esc_attr( $this->get_openai_api_key() ) . '" />';
+		printf( '<input type="text" id="%1$s" name="%1$s" value="%2$s" />', self::OPENAI_API_KEY, esc_attr( $this->get_openai_api_key() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		$allowed_tag = [
 			'a' => [
 				'href'   => [],
@@ -108,7 +119,7 @@ class Settings {
 	}
 
 	public function generate_alt_text_callback(): void {
-		echo '<input type="checkbox" name="better_file_name_alt_text" value="1" ' . checked( $this->should_generate_alt_text(), true, false ) . ' />';
+		printf( '<input type="checkbox" name="%1$s" id="%1$s" value="1" %2$s />', self::ALT_TEXT, checked( $this->should_generate_alt_text(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	public function get_rename_file(): bool {
