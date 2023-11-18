@@ -1,6 +1,7 @@
 {
   "name": "patelutkarsh/better-file-name",
   "license": "GPL-2.0-or-later",
+  "version": "1.1.0",
   "description": "A WordPress plugin to rename the image based on the image content using openai.",
   "type": "wordpress-plugin",
   "autoload": {

@@ -5,11 +5,11 @@ Tags: file names, file name generator, alt text, alt text generator, AI, automat
 Requires at least: 5.0
 Tested up to: 6.4.1
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Simple plugin that renames file using open api (gpt-4-vision) when uploaded to WordPress.
+Simple plugin that renames file using open api (gpt-4-vision) when uploaded to WordPress and generate alt text for images.
 
 == Installation ==
 

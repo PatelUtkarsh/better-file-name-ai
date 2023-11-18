@@ -8,7 +8,7 @@ use WP_CLI;
 class Generate_Alt_Text_Cli {
 
 	/**
-	 * Add missing alt texts for images.
+	 * Generate missing alt texts for images.
 	 *
 	 * ## OPTIONS
 	 *
