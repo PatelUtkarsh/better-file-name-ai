@@ -5,11 +5,11 @@ Tags: file names, file name generator, alt text, alt text generator, AI, automat
 Requires at least: 5.0
 Tested up to: 6.4.1
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Simple plugin that renames file using open api (gpt-4-vision) when uploaded to WordPress.
+Simple plugin that renames file using open api (gpt-4-vision) when uploaded to WordPress and generate alt text for images.
 
 == Installation ==
 
@@ -17,6 +17,12 @@ Simple plugin that renames file using open api (gpt-4-vision) when uploaded to W
 2. Upload the plugin folder to the `/wp-content/plugins/` directory or upload the zip file from WordPress admin panel.
 3. Activate the plugin through the 'Plugins' menu in WordPress.
 4. Setup open api key from settings page from under tools menu. `/wp-admin/tools.php?page=better-file-name-settings`
+
+If your setup supports composer autoloading then you can install plugin using composer.
+
+1. Run `composer require patelutkarsh/better-file-name` command.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Setup open api key from settings page from under tools menu. `/wp-admin/tools.php?page=better-file-name-settings`
 
 == Frequently Asked Questions ==
 = How to get openapi key? =

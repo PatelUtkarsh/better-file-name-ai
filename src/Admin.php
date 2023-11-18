@@ -46,7 +46,7 @@ class Admin {
 
 	public function update_alt_text( array $data, int $post_id ): array {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			// Skip if WP-CLI is running; This should be handled via new command.
+			// Skip if WP-CLI is running; This should be handled via custom command.
 			return $data;
 		}
 
