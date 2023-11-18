@@ -11,10 +11,18 @@ class Openai_Wrapper {
 		$this->openai_api_key = $openai_api_key;
 	}
 
-	public function get_renamed_filename( $path ): string {
+	public function get_filename( string $path ): string {
+		return $this->request( $path, __( 'What would a good, short, dash separator filename be for this image? Only reply with the filename.', 'better-file-name' ) );
+	}
+
+	public function get_alt_text( string $path ): string {
+		return $this->request( $path, __( 'Please provide the alt text for this image, ensuring it describes the content comprehensively for individuals who cannot see it. Only reply output.', 'better-file-name' ) );
+	}
+
+	public function request( string $path, string $prompt ): string {
 
 		if ( ! $this->openai_api_key ) {
-			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name' ) );
 		}
 
 		$image_url = $this->base64( $path );
@@ -27,7 +35,7 @@ class Openai_Wrapper {
 					'content' => [
 						[
 							'type' => 'text',
-							'text' => __( 'What would a good, short, dash separator filename be for this image? Only reply with the filename.', 'better-file-name-ai' ),
+							'text' => $prompt,
 						],
 						[
 							'type'      => 'image_url',
@@ -58,7 +66,7 @@ class Openai_Wrapper {
 		}
 
 		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {
-			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name' ) );
 		}
 
 		$response = wp_remote_retrieve_body( $request );
@@ -67,7 +75,7 @@ class Openai_Wrapper {
 		if ( $result && isset( $result['choices'][0]['message']['content'] ) ) {
 			return $result['choices'][0]['message']['content'];
 		} else {
-			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name' ) );
 		}
 	}
 
@@ -79,7 +87,7 @@ class Openai_Wrapper {
 		finfo_close( $finfo );
 
 		if ( strpos( $type, 'image/' ) !== 0 ) {
-			throw new \Exception( esc_html__( 'File is not an image', 'better-file-name-ai' ) );
+			throw new \Exception( esc_html__( 'File is not an image', 'better-file-name' ) );
 		}
 
 		return "data:$type;base64," . $base64_data;

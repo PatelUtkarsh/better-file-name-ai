@@ -9,9 +9,17 @@ class Admin {
 
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
-		if ( $this->settings->get_rename_file() && $this->settings->get_openai_api_key() ) {
+
+		if ( ! $this->settings->get_openai_api_key() ) {
+			return;
+		}
+		if ( $this->settings->get_rename_file() ) {
 			add_filter( 'wp_handle_sideload_prefilter', [ $this, 'rename_new_file' ], 9999 );
 			add_filter( 'wp_handle_upload_prefilter', [ $this, 'rename_new_file' ], 9999 );
+		}
+
+		if ( $this->settings->should_generate_alt_text() ) {
+			add_filter( 'wp_update_attachment_metadata', [ $this, 'update_alt_text' ], 10, 2 );
 		}
 	}
 
@@ -20,7 +28,7 @@ class Admin {
 
 		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
 		try {
-			$new_filename = $wrapper->get_renamed_filename( $path );
+			$new_filename = $wrapper->get_filename( $path );
 			if ( $new_filename ) {
 				// Amend extension to new file name from original file name if it doesn't exists in new filename.
 				$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
@@ -34,5 +42,30 @@ class Admin {
 		}
 
 		return $file;
+	}
+
+	public function update_alt_text( array $data, int $post_id ): array {
+		$has_alt = get_post_meta( $post_id, '_wp_attachment_image_alt', true );
+		if ( ! empty( $has_alt ) || ! isset( $data['file'] ) ) {
+			return $data;
+		}
+
+		$uploads = wp_get_upload_dir();
+		$file    = $uploads['basedir'] . '/' . $data['file'];
+
+		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
+		try {
+			$new_alt_text = $wrapper->get_alt_text( $file );
+			if ( $new_alt_text ) {
+				if ( str_starts_with( $new_alt_text, 'Alt text: ' ) ) {
+					$new_alt_text = str_replace( 'Alt text: ', '', $new_alt_text );
+				}
+				update_post_meta( $post_id, '_wp_attachment_image_alt', $new_alt_text );
+			}
+		} catch ( \Exception $e ) {
+			error_log( $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
+
+		return $data;
 	}
 }

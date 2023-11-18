@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name:     Better File Name Ai
- * Plugin URI:      github.com/patelutkarsh/better-file-name-ai
+ * Plugin Name:     Better File Name
+ * Plugin URI:      github.com/patelutkarsh/better-file-name
  * Description:     MVP plugin to rename uploaded file to more meaningful name using OpenAI.
  * Author:          Utkarsh
  * Author URI:      github.com/patelutkarsh
- * Text Domain:     better-file-name-ai
+ * Text Domain:     better-file-name
  * Version:         1.0.1
  * Requires PHP:    8.1
  *
