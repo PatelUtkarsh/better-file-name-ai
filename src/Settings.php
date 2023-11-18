@@ -80,6 +80,8 @@ class Settings {
 			'better_file_name_settings',
 			$section
 		);
+		$section_api = 'better_file_name_section_api';
+		add_settings_section( $section_api, esc_html__( 'API', 'better-file-name' ), '__return_empty_string', 'better_file_name_settings' );
 		add_settings_field(
 			self::OPENAI_API_KEY,
 			esc_html__( 'OpenAI API Key', 'better-file-name' ),
@@ -88,7 +90,7 @@ class Settings {
 				'better_file_name_api_key_callback',
 			],
 			'better_file_name_settings',
-			$section
+			$section_api
 		);
 	}
 

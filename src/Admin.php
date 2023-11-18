@@ -45,6 +45,11 @@ class Admin {
 	}
 
 	public function update_alt_text( array $data, int $post_id ): array {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			// Skip if WP-CLI is running; This should be handled via new command.
+			return $data;
+		}
+
 		$has_alt = get_post_meta( $post_id, '_wp_attachment_image_alt', true );
 		if ( ! empty( $has_alt ) || ! isset( $data['file'] ) ) {
 			return $data;
