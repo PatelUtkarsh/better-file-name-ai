@@ -49,6 +49,7 @@ class Settings {
 				<?php do_settings_sections( 'better_file_name_settings' ); ?>
 				<?php submit_button(); ?>
 			</form>
+			<p class="description"><?php esc_html_e( 'Note: Plugin utilizes separate APIs request for generating file names and alt text from the uploaded images and billing for image processing is determined by the uploaded image\'s file size.', 'better-file-name' ); ?></p>
 		</div>
 		<?php
 	}
@@ -97,6 +98,13 @@ class Settings {
 
 	public function better_file_name_api_key_callback(): void {
 		echo '<input type="text" name="better_file_name_api_key" value="' . esc_attr( $this->get_openai_api_key() ) . '" />';
+		$allowed_tag = [
+			'a' => [
+				'href'   => [],
+				'target' => [],
+			],
+		];
+		echo '<p class="description">' . wp_kses( __( 'Get your API key from your <a href="https://platform.openai.com/account/api-keys" target="_blank">OpenAI account</a>.', 'better-file-name' ), $allowed_tag ) . '</p>';
 	}
 
 	public function generate_alt_text_callback(): void {
