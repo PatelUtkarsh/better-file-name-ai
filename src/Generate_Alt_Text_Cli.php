@@ -78,14 +78,24 @@ class Generate_Alt_Text_Cli {
 						$file_path = $base_dir . DIRECTORY_SEPARATOR . $file_path . $attachment_data['file'];
 					}
 				} else {
-					$file_path = wp_get_attachment_url( $post_id );
+					[ $file_path ] = image_downsize( $post_id, 'thumbnail' );
+					if ( ! $file_path ) {
+						[ $file_path ] = image_downsize( $post_id, 'large' );
+					}
+					if ( ! $file_path ) {
+						$file_path = wp_get_attachment_url( $post_id );
+					}
 				}
 				if ( ! $dry_run && $setting->get_openai_api_key() ) {
 					try {
-						$text = $open_ai_wrapper->get_alt_text( $file_path );
-						if ( $text ) {
-							++$generated_alt_text_count;
-							update_post_meta( $post_id, '_wp_attachment_image_alt', $text );
+						if ( ! empty( $file_path ) ) {
+							$text = $open_ai_wrapper->get_alt_text( $file_path );
+							if ( $text ) {
+								++$generated_alt_text_count;
+								update_post_meta( $post_id, '_wp_attachment_image_alt', $text );
+							}
+						} else {
+							WP_CLI::warning( 'File not found for attachment ID: ' . $post_id );
 						}
 					} catch ( \Exception $e ) {
 						WP_CLI::warning( $e->getMessage() );
