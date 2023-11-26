@@ -40,8 +40,8 @@ class Openai_Wrapper {
 		}
 
 		$data = [
-			'model'    => 'gpt-4-vision-preview',
-			'messages' => [
+			'model'      => 'gpt-4-vision-preview',
+			'messages'   => [
 				[
 					'role'    => 'user',
 					'content' => [
@@ -56,6 +56,7 @@ class Openai_Wrapper {
 					],
 				],
 			],
+			'max_tokens' => 1024,
 		];
 
 		$headers = [
