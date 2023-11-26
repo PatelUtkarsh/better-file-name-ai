@@ -21,10 +21,15 @@
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "^3.0",
-    "phpcompatibility/phpcompatibility-wp": "*"
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "szepeviktor/phpstan-wordpress": "^1.3",
+    "php-stubs/wp-cli-stubs": "^2.9"
   },
   "scripts": {
-    "lint": "phpcs --standard=.phpcs.xml.dist",
+    "lint": [
+      "phpcs --standard=.phpcs.xml.dist",
+      "phpstan analyse"
+    ],
     "format": "phpcbf --standard=.phpcs.xml.dist"
   }
 }
