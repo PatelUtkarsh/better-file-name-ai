@@ -28,14 +28,18 @@ class Admin {
 
 		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
 		try {
-			$new_filename = $wrapper->get_filename( $path );
-			if ( $new_filename ) {
-				// Amend extension to new file name from original file name if it doesn't exists in new filename.
-				$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
-				if ( ! str_contains( $new_filename, $extension ) ) {
-					$new_filename .= '.' . $extension;
+			$image = new Image();
+			if ( $image->is_image( $path ) ) {
+				$new_file     = $image->resize_image( $path );
+				$new_filename = $wrapper->get_filename( $new_file );
+				if ( $new_filename ) {
+					// Amend extension to new file name from original file name if it doesn't exists in new filename.
+					$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
+					if ( ! str_contains( $new_filename, $extension ) ) {
+						$new_filename .= '.' . $extension;
+					}
+					$file['name'] = $new_filename;
 				}
-				$file['name'] = $new_filename;
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -60,9 +64,13 @@ class Admin {
 
 		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
 		try {
-			$new_alt_text = $wrapper->get_alt_text( $file );
-			if ( $new_alt_text ) {
-				update_post_meta( $post_id, '_wp_attachment_image_alt', $new_alt_text );
+			$image = new Image();
+			if ( $image->is_image( $file ) ) {
+				$new_file     = $image->resize_image( $file );
+				$new_alt_text = $wrapper->get_alt_text( $new_file );
+				if ( $new_alt_text ) {
+					update_post_meta( $post_id, '_wp_attachment_image_alt', $new_alt_text );
+				}
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
