@@ -74,7 +74,7 @@ class Openai_Wrapper {
 		);
 
 		if ( $request instanceof \WP_Error ) {
-			throw new \Exception( esc_html( $request->get_error_messages() ) );
+			throw new \Exception( esc_html( implode( ', ', $request->get_error_messages() ) ) );
 		}
 
 		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {

@@ -55,9 +55,9 @@ class Settings {
 	}
 
 	public function register_settings(): void {
-		register_setting( 'better_file_name_settings_group', self::RENAME_NEW_FILE, 'intval' );
-		register_setting( 'better_file_name_settings_group', self::OPENAI_API_KEY, 'sanitize_text_field' );
-		register_setting( 'better_file_name_settings_group', self::ALT_TEXT, 'intval' );
+		register_setting( 'better_file_name_settings_group', self::RENAME_NEW_FILE, [ 'sanitize_callback' => 'intval' ] );
+		register_setting( 'better_file_name_settings_group', self::OPENAI_API_KEY, [ 'sanitize_callback' => 'sanitize_text_field' ] );
+		register_setting( 'better_file_name_settings_group', self::ALT_TEXT, [ 'sanitize_callback' => 'intval' ] );
 		$section = 'better_file_name_section';
 		add_settings_section( $section, esc_html__( 'Media', 'better-file-name' ), '__return_empty_string', 'better_file_name_settings' );
 		add_settings_field(

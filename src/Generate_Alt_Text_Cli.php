@@ -78,7 +78,7 @@ class Generate_Alt_Text_Cli {
 						$file_path = $base_dir . DIRECTORY_SEPARATOR . $file_path . $attachment_data['file'];
 					}
 				} else {
-					$file_path = wp_get_attachment_url( $post_id, 'large' );
+					$file_path = wp_get_attachment_url( $post_id );
 				}
 				if ( ! $dry_run && $setting->get_openai_api_key() ) {
 					try {
