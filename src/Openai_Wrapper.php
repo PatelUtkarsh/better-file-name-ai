@@ -92,15 +92,20 @@ class Openai_Wrapper {
 	}
 
 	private function base64( $filename ): string {
-		$data        = file_get_contents( $filename ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$base64_data = base64_encode( $data ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-		$finfo       = finfo_open( FILEINFO_MIME_TYPE );
-		$type        = finfo_file( $finfo, $filename );
+		if ( ! function_exists( 'finfo_open' ) ) {
+			throw new \Exception( esc_html__( 'Fileinfo extension not installed', 'better-file-name' ) );
+		}
+
+		$finfo = finfo_open( FILEINFO_MIME_TYPE );
+		$type  = finfo_file( $finfo, $filename );
 		finfo_close( $finfo );
 
 		if ( strpos( $type, 'image/' ) !== 0 ) {
 			throw new \Exception( esc_html__( 'File is not an image', 'better-file-name' ) );
 		}
+
+		$data        = file_get_contents( $filename ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$base64_data = base64_encode( $data ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
 		return "data:$type;base64," . $base64_data;
 	}
