@@ -17,7 +17,13 @@ declare( strict_types=1 );
 use Better_File_Name_Ai\Admin;
 use Better_File_Name_Ai\Settings;
 
-require_once __DIR__ . '/vendor/autoload.php';
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
+
+if ( ! class_exists( 'Better_File_Name_Ai\\Settings' ) ) {
+	throw new \Exception( esc_html__( 'Could not find vendor/autoload.php, make sure you ran composer.', 'better-file-name' ) );
+}
 
 $better_file_name_settings = new Settings();
 $better_file_name_admin    = new Admin( $better_file_name_settings );
