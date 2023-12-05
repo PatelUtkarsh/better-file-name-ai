@@ -5,7 +5,7 @@ Tags: file names, file name generator, alt text, alt text generator, AI, automat
 Requires at least: 5.0
 Tested up to: 6.4.1
 Requires PHP: 8.1
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 

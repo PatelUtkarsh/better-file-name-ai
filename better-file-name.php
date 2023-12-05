@@ -6,7 +6,7 @@
  * Author:          Utkarsh
  * Author URI:      github.com/patelutkarsh
  * Text Domain:     better-file-name
- * Version:         1.1.1
+ * Version:         1.2.0
  * Requires PHP:    8.1
  *
  * @package         Better_File_Name_Ai
