@@ -1,7 +1,8 @@
 name: Deploy
 on:
-  release:
-    types: [published,edited]
+  push:
+    branches:
+      - deploy-test
 jobs:
   tag:
     name: New release
@@ -24,8 +25,8 @@ jobs:
         id: deploy
         run: |
           rsync -av --exclude-from='.distignore' ./ ./tempfolder/
-          zip -r "${github.event.repository.name}.zip" ./tempfolder/
-          echo "::set-output name=zip-path::${GITHUB_WORKSPACE}/${github.event.repository.name}.zip"
+          zip -r "${github.repository.name}.zip" ./tempfolder/
+          echo "::set-output name=zip-path::${GITHUB_WORKSPACE}/${github.repository.name}.zip"
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
