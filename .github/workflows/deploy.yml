@@ -1,7 +1,7 @@
 name: Deploy
 on:
   release:
-    types: [published]
+    types: [published,edited]
 jobs:
   tag:
     name: New release
