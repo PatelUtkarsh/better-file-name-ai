@@ -6,7 +6,7 @@ on:
       - prereleased
 jobs:
   tag:
-    name: New release
+    name: Upload release asset
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
