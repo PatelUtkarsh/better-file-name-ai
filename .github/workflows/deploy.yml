@@ -23,7 +23,7 @@ jobs:
       - name: Create Release Asset
         id: deploy
         run: |
-          rsync -av --exclude-from='.distinogre' ./ ./tempfolder/
+          rsync -av --exclude-from='.distignore' ./ ./tempfolder/
           zip -r "${GITHUB_EVENT.repository.name}.zip" ./tempfolder/
           echo "::set-output name=zip-path::${GITHUB_WORKSPACE}/${GITHUB_EVENT.repository.name}.zip"
       - name: Upload release asset
