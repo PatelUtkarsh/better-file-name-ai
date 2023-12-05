@@ -31,14 +31,5 @@
       "phpstan analyse"
     ],
     "format": "phpcbf --standard=.phpcs.xml.dist"
-  },
-  "archive": {
-    "exclude": [
-      ".*",
-      "tests/*",
-      "phpstan.neon.dist",
-      "README.md",
-      "phpunit.xml.dist"
-    ]
   }
 }
