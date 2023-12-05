@@ -20,11 +20,6 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
-      - name: Dump github context
-        run: echo "$GITHUB_CONTEXT"
-        shell: bash
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
       - name: Build
         run: |
           composer install --no-dev --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs
