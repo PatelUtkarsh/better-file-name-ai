@@ -1,8 +1,9 @@
 name: Deploy
 on:
-  push:
-    branches:
-      - deploy-test
+  release:
+    types:
+      - published
+      - prereleased
 jobs:
   tag:
     name: New release
