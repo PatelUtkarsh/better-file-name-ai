@@ -186,6 +186,8 @@ class Openai_Wrapper {
 			$data = json_decode( wp_remote_retrieve_body( $response ), true );
 			if ( isset( $data['data'][0]['url'] ) ) {
 				return $data['data'][0]['url'];
+			} elseif ( isset( $data['error']['message'] ) ) {
+				throw new \Exception( esc_html( $data['error']['message'] ) );
 			}
 		}
 

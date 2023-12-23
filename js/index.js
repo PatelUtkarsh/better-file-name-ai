@@ -1,4 +1,4 @@
-import { Button, TextareaControl, Spinner } from '@wordpress/components';
+import { Button, Spinner, TextareaControl } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
@@ -8,6 +8,7 @@ import apiFetch from '@wordpress/api-fetch';
 const DalleIntegration = () => {
 	const [ prompt, setPrompt ] = useState( '' );
 	const [ isLoading, setIsLoading ] = useState( false );
+	const [ errorMessage, setErrorMessage ] = useState( null );
 	const { postTitle, postContent } = useSelect( ( select ) => ( {
 		postTitle: select( 'core/editor' ).getEditedPostAttribute( 'title' ),
 		postContent:
@@ -18,6 +19,7 @@ const DalleIntegration = () => {
 
 	const generateImage = async () => {
 		setIsLoading( true );
+		setErrorMessage( null );
 		try {
 			const data = await apiFetch( {
 				path: '/better-file-name/v1/dalle-generate-image',
@@ -36,6 +38,9 @@ const DalleIntegration = () => {
 				editPost( { featured_media: data.attachment_id } );
 			}
 		} catch ( error ) {
+			if ( error?.error ) {
+				setErrorMessage( error.error );
+			}
 			console.error( 'Error generating image:', error );
 		} finally {
 			setIsLoading( false );
@@ -60,6 +65,11 @@ const DalleIntegration = () => {
 					__( 'Generate Image', 'better-file-name' )
 				) }
 			</Button>
+			{ errorMessage && (
+				<div style={ { color: 'red', marginBlockStart: '10px' } }>
+					{ errorMessage }
+				</div>
+			) }
 		</div>
 	);
 };
