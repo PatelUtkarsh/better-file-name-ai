@@ -23,6 +23,6 @@ This WordPress plugin renames files to be more readable using an open API (gpt-4
 
 Run following command to generate alt text for all images that do not have any.
 
-	wp better-file-name generate-alt-text --dry-run
+    wp better-file-name generate-alt-text --dry-run
 
 This can take a while depending on the number of images on your site.

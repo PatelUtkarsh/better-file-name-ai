@@ -1,35 +1,35 @@
 {
-  "name": "patelutkarsh/better-file-name",
-  "license": "GPL-2.0-or-later",
-  "description": "A WordPress plugin to rename the image based on the image content using openai.",
-  "type": "wordpress-plugin",
-  "autoload": {
-    "psr-4": {
-      "Better_File_Name_Ai\\": "src/"
-    }
-  },
-  "authors": [
-    {
-      "name": "Utkarsh Patel",
-      "email": "itismeutkarsh@gmail.com"
-    }
-  ],
-  "config": {
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
-  },
-  "require-dev": {
-    "wp-coding-standards/wpcs": "^3.0",
-    "phpcompatibility/phpcompatibility-wp": "*",
-    "szepeviktor/phpstan-wordpress": "^1.3",
-    "php-stubs/wp-cli-stubs": "^2.9"
-  },
-  "scripts": {
-    "lint": [
-      "phpcs --standard=.phpcs.xml.dist",
-      "phpstan analyse"
-    ],
-    "format": "phpcbf --standard=.phpcs.xml.dist"
-  }
+	"name": "patelutkarsh/better-file-name",
+	"license": "GPL-2.0-or-later",
+	"description": "A WordPress plugin to rename the image based on the image content using openai.",
+	"type": "wordpress-plugin",
+	"autoload": {
+		"psr-4": {
+			"Better_File_Name_Ai\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "Utkarsh Patel",
+			"email": "itismeutkarsh@gmail.com"
+		}
+	],
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^3.0",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"szepeviktor/phpstan-wordpress": "^1.3",
+		"php-stubs/wp-cli-stubs": "^2.9"
+	},
+	"scripts": {
+		"lint": [
+			"phpcs --standard=.phpcs.xml.dist",
+			"phpstan analyse"
+		],
+		"format": "phpcbf --standard=.phpcs.xml.dist"
+	}
 }

@@ -110,4 +110,84 @@ class Openai_Wrapper {
 
 		return "data:$type;base64," . $base64_data;
 	}
+
+	public function generate_image( $prompt, $title = '', $content = '' ) {
+		$model      = 'dall-e-2';
+		$parameters = [
+			'dall-e-2' => [
+				'length' => 1000 - 100,
+				'size'   => '1024x1024',
+			],
+			'dall-e-3' => [
+				'length' => 4000 - 100,
+				'size'   => '1792x1024',  // 7:4 aspect ratio is highest quality supported.
+			],
+		];
+
+		$current_parameters = $parameters[ $model ];
+
+		$content_without_tag = wp_strip_all_tags( $content );
+
+		if ( $model === 'dall-e-3' ) {
+			$prompt_data = wp_json_encode(
+				[
+					'user_prompt' => $prompt,
+					'title'       => $title,
+					'content'     => $content_without_tag,
+				]
+			);
+		} else {
+			$prompt_data = wp_json_encode(
+				[
+					'user_prompt' => $prompt,
+					'title'       => $title,
+				]
+			);
+		}
+
+		if ( strlen( $prompt ) > $current_parameters['length'] && $model === 'dall-e-3' ) {
+			$excess_length            = strlen( $prompt ) - $current_parameters['length'];
+			$truncated_content_length = strlen( $content_without_tag ) - $excess_length;
+			$truncated_content_length = max( $truncated_content_length, 0 );
+			$truncated_content        = substr( $content_without_tag, 0, $truncated_content_length );
+			$prompt_data              = json_encode(
+				[
+					'user_prompt' => $prompt,
+					'title'       => $title,
+					'content'     => $truncated_content,
+				]
+			);
+		}
+
+		$body = json_encode(
+			[
+				'model'   => $model,
+				'prompt'  => wp_json_encode( $prompt_data ),
+				'quality' => 'hd',
+				'n'       => 1,
+				'size'    => $current_parameters['size'],
+			]
+		);
+
+		$response = wp_remote_post(
+			'https://api.openai.com/v1/images/generations',
+			[
+				'headers' => [
+					'Authorization' => 'Bearer ' . $this->openai_api_key,
+					'Content-Type'  => 'application/json',
+				],
+				'body'    => $body,
+				'timeout' => '120',
+			]
+		);
+
+		if ( ! is_wp_error( $response ) ) {
+			$data = json_decode( wp_remote_retrieve_body( $response ), true );
+			if ( isset( $data['data'][0]['url'] ) ) {
+				return $data['data'][0]['url'];
+			}
+		}
+
+		throw new \Exception( esc_html__( 'Unable to generate image from OpenAI', 'better-file-name' ) );
+	}
 }
