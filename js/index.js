@@ -1,4 +1,4 @@
-import { Button, TextControl, TextareaControl } from '@wordpress/components';
+import { Button, TextareaControl, Spinner } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
@@ -7,6 +7,7 @@ import apiFetch from '@wordpress/api-fetch';
 
 const DalleIntegration = () => {
 	const [ prompt, setPrompt ] = useState( '' );
+	const [ isLoading, setIsLoading ] = useState( false );
 	const { mediaID, postTitle, postContent } = useSelect( ( select ) => ( {
 		mediaID:
 			select( 'core/editor' ).getEditedPostAttribute( 'featured_media' ),
@@ -18,6 +19,7 @@ const DalleIntegration = () => {
 	const { editPost } = useDispatch( 'core/editor' );
 
 	const generateImage = async () => {
+		setIsLoading( true );
 		try {
 			const data = await apiFetch( {
 				path: '/better-file-name/v1/dalle-generate-image',
@@ -37,6 +39,8 @@ const DalleIntegration = () => {
 			}
 		} catch ( error ) {
 			console.error( 'Error generating image:', error );
+		} finally {
+			setIsLoading( false );
 		}
 	};
 
@@ -51,8 +55,12 @@ const DalleIntegration = () => {
 				) }
 				onChange={ ( value ) => setPrompt( value ) }
 			/>
-			<Button isPrimary onClick={ generateImage }>
-				{ __( 'Generate Image', 'better-file-name' ) }
+			<Button isPrimary onClick={ generateImage } disabled={ isLoading }>
+				{ isLoading ? (
+					<Spinner />
+				) : (
+					__( 'Generate Image', 'better-file-name' )
+				) }
 			</Button>
 		</div>
 	);
