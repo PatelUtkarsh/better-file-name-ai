@@ -15,9 +15,8 @@
 declare( strict_types=1 );
 
 use Better_File_Name_Ai\Admin;
-use Better_File_Name_Ai\Block;
-use Better_File_Name_Ai\Settings;
 use Better_File_Name_Ai\Dalle_Image_Generator;
+use Better_File_Name_Ai\Settings;
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
@@ -28,8 +27,7 @@ if ( ! class_exists( 'Better_File_Name_Ai\\Settings' ) ) {
 }
 
 $better_file_name_settings              = new Settings();
-$better_file_name_admin                 = new Admin( $better_file_name_settings );
-$better_file_name_featured_image        = new Block( plugins_url( 'build', __FILE__ ) );
+$better_file_name_admin                 = new Admin( $better_file_name_settings, plugins_url( 'build', __FILE__ ) );
 $better_file_name_dalle_image_generator = new Dalle_Image_Generator( $better_file_name_settings );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {

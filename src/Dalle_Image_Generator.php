@@ -42,6 +42,7 @@ class Dalle_Image_Generator {
 	}
 
 	public function validate_string( $param, $_request, $_key ) {
+		unset( $_request, $_key );
 		return is_string( $param );
 	}
 
@@ -54,8 +55,7 @@ class Dalle_Image_Generator {
 			$wrapper       = new Openai_Wrapper( $this->setting->get_openai_api_key(), $this->setting->get_dell_e_version() );
 			$url           = $wrapper->generate_image( $prompt, $post_title, $post_content );
 			$attachment_id = $this->save_image_as_attachment( $url );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			return new WP_REST_Response( [ 'error' => $e->getMessage() ], 500 );
 		}
 
