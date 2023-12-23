@@ -19,34 +19,30 @@ class Dalle_Image_Generator {
 			'/dalle-generate-image',
 			[
 				'methods'             => 'POST',
-				'callback'            => [ $this, 'generate_image' ],
-				'permission_callback' => [ $this, 'generate_image_permissions_check' ],
+				'callback'            => $this->generate_image( ... ),
+				'permission_callback' => function () {
+					return current_user_can( 'upload_files' );
+				},
 				'args'                => [
 					'postTitle'   => [
 						'required'          => true,
-						'validate_callback' => function ( $param, $request, $key ) {
-							return is_string( $param );
-						},
+						'validate_callback' => $this->validate_string( ... ),
 					],
 					'postContent' => [
 						'required'          => true,
-						'validate_callback' => function ( $param, $request, $key ) {
-							return is_string( $param );
-						},
+						'validate_callback' => $this->validate_string( ... ),
 					],
 					'prompt'      => [
 						'required'          => true,
-						'validate_callback' => function ( $param, $request, $key ) {
-							return is_string( $param );
-						},
+						'validate_callback' => $this->validate_string( ... ),
 					],
 				],
 			]
 		);
 	}
 
-	public function generate_image_permissions_check( $request ) {
-		return current_user_can( 'upload_files' );
+	public function validate_string( $param, $_request, $_key ) {
+		return is_string( $param );
 	}
 
 	public function generate_image( $request ) {
@@ -58,7 +54,8 @@ class Dalle_Image_Generator {
 			$wrapper       = new Openai_Wrapper( $this->setting->get_openai_api_key() );
 			$url           = $wrapper->generate_image( $prompt, $post_title, $post_content );
 			$attachment_id = $this->save_image_as_attachment( $url );
-		} catch ( \Exception $e ) {
+		}
+		catch ( \Exception $e ) {
 			return new WP_REST_Response( [ 'error' => $e->getMessage() ], 500 );
 		}
 
@@ -77,15 +74,15 @@ class Dalle_Image_Generator {
 		}
 
 		$file_array = [
-			'name'     => basename( parse_url( $image_url, PHP_URL_PATH ) ),
+			'name'     => basename( wp_parse_url( $image_url, PHP_URL_PATH ) ),
 			'tmp_name' => $tmp,
 		];
 
 		$id = media_handle_sideload( $file_array, 0 );
 
-		if ( is_wp_error( $id ) ) {
-			@unlink( $file_array['tmp_name'] );  // Clean up temp file on error
-			throw new \Exception( esc_html( implode( ', ', $tmp->get_error_messages() ) ) );
+		if ( $id instanceof \WP_Error ) {
+			@unlink( $file_array['tmp_name'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink, WordPress.PHP.NoSilencedErrors.Discouraged
+			throw new \Exception( esc_html( implode( ', ', $id->get_error_messages() ) ) );
 		}
 
 		return $id;

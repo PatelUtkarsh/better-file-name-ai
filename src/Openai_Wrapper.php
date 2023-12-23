@@ -150,7 +150,7 @@ class Openai_Wrapper {
 			$truncated_content_length = strlen( $content_without_tag ) - $excess_length;
 			$truncated_content_length = max( $truncated_content_length, 0 );
 			$truncated_content        = substr( $content_without_tag, 0, $truncated_content_length );
-			$prompt_data              = json_encode(
+			$prompt_data              = wp_json_encode(
 				[
 					'user_prompt' => $prompt,
 					'title'       => $title,
@@ -159,7 +159,7 @@ class Openai_Wrapper {
 			);
 		}
 
-		$body = json_encode(
+		$body = wp_json_encode(
 			[
 				'model'   => $model,
 				'prompt'  => wp_json_encode( $prompt_data ),

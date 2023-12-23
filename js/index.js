@@ -8,9 +8,7 @@ import apiFetch from '@wordpress/api-fetch';
 const DalleIntegration = () => {
 	const [ prompt, setPrompt ] = useState( '' );
 	const [ isLoading, setIsLoading ] = useState( false );
-	const { mediaID, postTitle, postContent } = useSelect( ( select ) => ( {
-		mediaID:
-			select( 'core/editor' ).getEditedPostAttribute( 'featured_media' ),
+	const { postTitle, postContent } = useSelect( ( select ) => ( {
 		postTitle: select( 'core/editor' ).getEditedPostAttribute( 'title' ),
 		postContent:
 			select( 'core/editor' ).getEditedPostAttribute( 'content' ),
