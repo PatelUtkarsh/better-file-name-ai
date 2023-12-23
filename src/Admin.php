@@ -26,7 +26,7 @@ class Admin {
 	public function rename_new_file( array $file ) {
 		$path = $file['tmp_name'];
 
-		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
+		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key(), $this->settings->get_dell_e_version() );
 		try {
 			$image = new Image();
 			if ( $image->is_image( $path ) ) {
@@ -62,7 +62,7 @@ class Admin {
 		$uploads = wp_get_upload_dir();
 		$file    = $uploads['basedir'] . '/' . $data['file'];
 
-		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
+		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key(), $this->settings->get_dell_e_version() );
 		try {
 			$image = new Image();
 			if ( $image->is_image( $file ) ) {

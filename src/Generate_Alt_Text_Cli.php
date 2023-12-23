@@ -60,7 +60,7 @@ class Generate_Alt_Text_Cli {
 		$base_dir              = $uploads['basedir'];
 		unset( $attachment_ids, $query, $uploads );
 
-		$open_ai_wrapper = new Openai_Wrapper( $setting->get_openai_api_key() );
+		$open_ai_wrapper = new Openai_Wrapper( $setting->get_openai_api_key(), $setting->get_dell_e_version() );
 
 		$generated_alt_text_count = 0;
 		foreach ( $attachment_ids_chunks as $attachment_ids ) {

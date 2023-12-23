@@ -5,10 +5,12 @@ namespace Better_File_Name_Ai;
 
 class Openai_Wrapper {
 
+	public string $dall_e_version;
 	private string $openai_api_key;
 
-	public function __construct( $openai_api_key ) {
+	public function __construct( $openai_api_key, $dall_e_version ) {
 		$this->openai_api_key = $openai_api_key;
+		$this->dall_e_version = $dall_e_version;
 	}
 
 	public function get_filename( string $path ): string {
@@ -112,7 +114,6 @@ class Openai_Wrapper {
 	}
 
 	public function generate_image( $prompt, $title = '', $content = '' ) {
-		$model      = 'dall-e-2';
 		$parameters = [
 			'dall-e-2' => [
 				'length' => 1000 - 100,
@@ -124,11 +125,11 @@ class Openai_Wrapper {
 			],
 		];
 
-		$current_parameters = $parameters[ $model ];
+		$current_parameters = $parameters[ $this->dall_e_version ];
 
 		$content_without_tag = wp_strip_all_tags( $content );
 
-		if ( $model === 'dall-e-3' ) {
+		if ( $this->dall_e_version === 'dall-e-3' ) {
 			$prompt_data = wp_json_encode(
 				[
 					'user_prompt' => $prompt,
@@ -145,7 +146,7 @@ class Openai_Wrapper {
 			);
 		}
 
-		if ( strlen( $prompt ) > $current_parameters['length'] && $model === 'dall-e-3' ) {
+		if ( strlen( $prompt ) > $current_parameters['length'] && $this->dall_e_version === 'dall-e-3' ) {
 			$excess_length            = strlen( $prompt ) - $current_parameters['length'];
 			$truncated_content_length = strlen( $content_without_tag ) - $excess_length;
 			$truncated_content_length = max( $truncated_content_length, 0 );
@@ -161,7 +162,7 @@ class Openai_Wrapper {
 
 		$body = wp_json_encode(
 			[
-				'model'   => $model,
+				'model'   => $this->dall_e_version,
 				'prompt'  => wp_json_encode( $prompt_data ),
 				'quality' => 'hd',
 				'n'       => 1,
