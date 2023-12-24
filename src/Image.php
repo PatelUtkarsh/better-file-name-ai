@@ -19,7 +19,6 @@ class Image {
 		return str_starts_with( $type, 'image/' );
 	}
 
-
 	public function resize_image( $file, $size = 512 ) {
 		// Resize image to thumbnail size.
 		$editor = wp_get_image_editor( $file );

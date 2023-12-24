@@ -11,17 +11,28 @@ class Settings {
 
 	public bool $should_generate_alt_text;
 
+	public bool $dell_e_integration;
+
+	public string $dell_e_version;
+
 	const RENAME_NEW_FILE = 'rename_new_file';
 
 	const OPENAI_API_KEY = 'better_file_name_api_key';
 
 	const ALT_TEXT = 'better_file_name_alt_text';
 
+	const DELL_E_INTEGRATION = 'better_file_name_dell_e_integration';
+
+	const DELL_E_VERSION = 'better_file_name_dell_e_version';
+
 	public function __construct() {
 
 		$this->should_rename_file       = (bool) get_option( self::RENAME_NEW_FILE, true );
 		$this->openai_api_key           = get_option( self::OPENAI_API_KEY, '' );
 		$this->should_generate_alt_text = (bool) get_option( self::ALT_TEXT, true );
+		$this->dell_e_integration       = (bool) get_option( self::DELL_E_INTEGRATION, true );
+		$this->dell_e_version           = get_option( self::DELL_E_VERSION, 'dall-e-2' );
+
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
 	}
@@ -58,6 +69,21 @@ class Settings {
 		register_setting( 'better_file_name_settings_group', self::RENAME_NEW_FILE, [ 'sanitize_callback' => 'intval' ] );
 		register_setting( 'better_file_name_settings_group', self::OPENAI_API_KEY, [ 'sanitize_callback' => 'sanitize_text_field' ] );
 		register_setting( 'better_file_name_settings_group', self::ALT_TEXT, [ 'sanitize_callback' => 'intval' ] );
+		register_setting( 'better_file_name_settings_group', self::DELL_E_INTEGRATION, [ 'sanitize_callback' => 'intval' ] );
+		register_setting(
+			'better_file_name_settings_group',
+			self::DELL_E_VERSION,
+			[
+				'sanitize_callback' => fn( $v ) => in_array(
+					$v,
+					[
+						'dall-e-3',
+						'dall-e-2',
+					],
+					true
+				) ? $v : '',
+			]
+		);
 		$section = 'better_file_name_section';
 		add_settings_section( $section, esc_html__( 'Media', 'better-file-name' ), '__return_empty_string', 'better_file_name_settings' );
 		add_settings_field(
@@ -84,6 +110,32 @@ class Settings {
 			$section,
 			[
 				'label_for' => self::ALT_TEXT,
+			]
+		);
+		add_settings_field(
+			self::DELL_E_INTEGRATION,
+			esc_html__( 'Dell-e integration with featured image', 'better-file-name' ),
+			[
+				$this,
+				'generate_dall_e_callback',
+			],
+			'better_file_name_settings',
+			$section,
+			[
+				'label_for' => self::DELL_E_INTEGRATION,
+			]
+		);
+		add_settings_field(
+			self::DELL_E_VERSION,
+			esc_html__( 'DELL E Version', 'better-file-name' ),
+			[
+				$this,
+				'generate_dall_e_version_dropdown_callback',
+			],
+			'better_file_name_settings',
+			$section,
+			[
+				'label_for' => self::DELL_E_VERSION,
 			]
 		);
 		$section_api = 'better_file_name_section_api';
@@ -122,6 +174,26 @@ class Settings {
 		printf( '<input type="checkbox" name="%1$s" id="%1$s" value="1" %2$s />', self::ALT_TEXT, checked( $this->should_generate_alt_text(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
+	public function generate_dall_e_callback(): void {
+		printf( '<input type="checkbox" name="%1$s" id="%1$s" value="1" %2$s />', self::DELL_E_INTEGRATION, checked( $this->should_integrate_dall_e(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	public function generate_dall_e_version_dropdown_callback() {
+		$versions = [
+			'dall-e-2' => 'Dall-e-2',
+			'dall-e-3' => 'Dall-e-3',
+		];
+		?>
+		<select name="<?php echo esc_attr( self::DELL_E_VERSION ); ?>"
+				id="<?php echo esc_attr( self::DELL_E_VERSION ); ?>">
+			<?php foreach ( $versions as $key => $version ) : ?>
+				<option
+					value="<?php echo esc_attr( $key ); ?>" <?php selected( $this->dell_e_version, $key ); ?>><?php echo esc_html( $version ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<?php
+	}
+
 	public function get_rename_file(): bool {
 		return $this->should_rename_file;
 	}
@@ -132,5 +204,13 @@ class Settings {
 
 	public function should_generate_alt_text(): bool {
 		return $this->should_generate_alt_text;
+	}
+
+	public function should_integrate_dall_e(): bool {
+		return $this->dell_e_integration;
+	}
+
+	public function get_dell_e_version(): string {
+		return $this->dell_e_version;
 	}
 }

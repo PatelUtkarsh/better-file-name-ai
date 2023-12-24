@@ -1,0 +1,37 @@
+{
+	"name": "better-file-name",
+	"version": "1.0.0",
+	"description": "## Description",
+	"main": "index.js",
+	"directories": {
+		"test": "tests"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/PatelUtkarsh/better-file-name-ai.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/PatelUtkarsh/better-file-name-ai/issues"
+	},
+	"homepage": "https://github.com/PatelUtkarsh/better-file-name-ai#readme",
+	"devDependencies": {
+		"@wordpress/scripts": "^26.19.0"
+	},
+	"scripts": {
+		"build": "wp-scripts build js/index.js --output-path=build --output-filename=index.build.js",
+		"check-engines": "wp-scripts check-engines",
+		"check-licenses": "wp-scripts check-licenses",
+		"format": "wp-scripts format '**/*.{js,jsx,ts,tsx,json,md}'",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js js/*.js",
+		"lint:md:docs": "wp-scripts lint-md-docs",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start js/index.js --output-path=build --output-filename=index.build.js",
+		"test:e2e": "wp-scripts test-e2e",
+		"test:unit": "wp-scripts test-unit-js"
+	}
+}

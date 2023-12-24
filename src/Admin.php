@@ -7,8 +7,12 @@ class Admin {
 
 	public Settings $settings;
 
-	public function __construct( Settings $settings ) {
-		$this->settings = $settings;
+	public $plugin_url;
+
+
+	public function __construct( Settings $settings, string $plugin_url ) {
+		$this->settings   = $settings;
+		$this->plugin_url = $plugin_url;
 
 		if ( ! $this->settings->get_openai_api_key() ) {
 			return;
@@ -21,12 +25,16 @@ class Admin {
 		if ( $this->settings->should_generate_alt_text() ) {
 			add_filter( 'wp_update_attachment_metadata', [ $this, 'update_alt_text' ], 10, 2 );
 		}
+
+		if ( $this->settings->should_integrate_dall_e() ) {
+			add_action( 'enqueue_block_editor_assets', $this->enqueue_scripts( ... ) );
+		}
 	}
 
 	public function rename_new_file( array $file ) {
 		$path = $file['tmp_name'];
 
-		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
+		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key(), $this->settings->get_dell_e_version() );
 		try {
 			$image = new Image();
 			if ( $image->is_image( $path ) ) {
@@ -62,7 +70,7 @@ class Admin {
 		$uploads = wp_get_upload_dir();
 		$file    = $uploads['basedir'] . '/' . $data['file'];
 
-		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key() );
+		$wrapper = new Openai_Wrapper( $this->settings->get_openai_api_key(), $this->settings->get_dell_e_version() );
 		try {
 			$image = new Image();
 			if ( $image->is_image( $file ) ) {
@@ -77,5 +85,22 @@ class Admin {
 		}
 
 		return $data;
+	}
+
+	public function enqueue_scripts() {
+		$version_file = __DIR__ . '/../build/index.build.asset.php';
+		if ( ! file_exists( $version_file ) ) {
+			return;
+		}
+		$version = include $version_file;
+		wp_enqueue_script(
+			'better-file-name-ai',
+			$this->plugin_url . '/index.build.js',
+			$version['dependencies'],
+			$version['version'],
+			[
+				'in_footer' => true,
+			]
+		);
 	}
 }
