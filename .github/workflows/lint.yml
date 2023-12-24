@@ -45,4 +45,4 @@ jobs:
     - name: npm build
       run: |
         npm install
-        npm run build
+        npm run lint:js
