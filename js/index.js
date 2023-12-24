@@ -41,7 +41,6 @@ const DalleIntegration = () => {
 			if ( error?.error ) {
 				setErrorMessage( error.error );
 			}
-			console.error( 'Error generating image:', error );
 		} finally {
 			setIsLoading( false );
 		}
