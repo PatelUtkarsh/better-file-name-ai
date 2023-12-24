@@ -32,7 +32,7 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Lint
+    - name: PHP Lint
       run: composer lint
 
     - name: Cache Node modules
@@ -42,7 +42,7 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    - name: npm build
+    - name: JS lint
       run: |
         npm install
         npm run lint:js
