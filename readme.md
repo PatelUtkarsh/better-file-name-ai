@@ -4,6 +4,11 @@
 
 This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images.
 
+### Additional features:
+- Allows generating featured image using dall-e-2 or dall-e-3 API.
+
+> Note: GPT-4 Vision is in preview, It is not recommended to use this plugin on a production site.
+
 ## Installation
 
 ### Manual Installation
