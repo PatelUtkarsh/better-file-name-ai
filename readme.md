@@ -4,6 +4,15 @@
 
 This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images.
 
+Rename file idea for WordPress was originally purposed by [Pascal Birchler](https://github.com/swissspidy) in following tweet.
+
+<div align="center">
+	<a href="https://twitter.com/swissspidy/status/1723610429081973133">
+		<img height="350" src="https://github.com/PatelUtkarsh/better-file-name-ai/assets/5015489/6d7dd824-c80a-4c14-90f1-06abf5331e79"/>
+	</a>
+</div>
+
+
 ### Additional features:
 - Allows generating featured image using dall-e-2 or dall-e-3 API.
 
