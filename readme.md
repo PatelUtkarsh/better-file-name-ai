@@ -18,9 +18,8 @@ Rename file idea for WordPress was originally purposed by [Pascal Birchler](http
 
 > Note: GPT-4 Vision is in preview, It is not recommended to use this plugin on a production site.
 
-## Demo: 
+## Demo:
 https://github.com/PatelUtkarsh/better-file-name-ai/assets/5015489/1f0ce636-ceeb-4e6e-918b-872d3069d40f
-
 
 
 ## Installation

@@ -8,6 +8,7 @@
  * Text Domain:     better-file-name
  * Version:         1.3.0
  * Requires PHP:    8.1
+ * License:         GPL-2.0-or-later
  *
  * @package         Better_File_Name_Ai
  */
