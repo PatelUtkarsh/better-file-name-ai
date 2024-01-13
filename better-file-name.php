@@ -19,6 +19,10 @@ use Better_File_Name_Ai\Admin;
 use Better_File_Name_Ai\Dalle_Image_Generator;
 use Better_File_Name_Ai\Settings;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
