@@ -1,7 +1,7 @@
 === Better File Name Ai ===
 Contributors: utkarshpatel
 Donate link:
-Tags: file names, file name generator, alt text, alt text generator, AI, automation.
+Tags: file names, file name generator, alt text, alt text generator, featured image generator, dall-e
 Requires at least: 5.0
 Tested up to: 6.4.1
 Requires PHP: 8.1
