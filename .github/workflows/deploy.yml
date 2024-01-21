@@ -34,18 +34,19 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: Create Release Asset
+      - name: WordPress Plugin Deploy
         id: deploy
-        run: |
-          rsync -av --exclude-from='.distignore' ./ ./better-file-name/
-          echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
-          echo "${REPO_NAME}"
-          zip -r better-file-name.zip ./better-file-name/
-          echo "::set-output name=zip-path::${GITHUB_WORKSPACE}/better-file-name.zip"
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ${{ steps.deploy.outputs.zip-path }}
