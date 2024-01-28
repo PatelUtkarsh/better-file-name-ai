@@ -1,0 +1,27 @@
+{
+  "landingPage": "\/wp-admin\/tools.php?page=better-file-name-settings",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "6.4"
+  },
+  "phpExtensionBundles": [
+    "kitchen-sink"
+  ],
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginZipFile": {
+        "resource": "wordpress.org/plugins",
+        "slug": "better-file-name"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    }
+  ]
+}
