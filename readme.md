@@ -1,7 +1,5 @@
 # Better File Name
 
-[![Test on WordPress Playground](https://img.shields.io/badge/Test%20on%20WordPress%20Playground-3F57E1?style=for-the-badge&logo=WordPress&logoColor=ffffff)](https://playground.wordpress.net/?mode=seamless&blueprint-url=https://raw.githubusercontent.com/PatelUtkarsh/better-file-name-ai/main/.wordpress-org/blueprints/blueprint.json)
-
 ## Description
 
 This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images.
