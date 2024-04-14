@@ -95,14 +95,14 @@ class Admin {
 	}
 
 	public function enqueue_scripts() {
-		$version_file = __DIR__ . '/../build/index.build.asset.php';
+		$version_file = __DIR__ . '/../build/index.asset.php';
 		if ( ! file_exists( $version_file ) ) {
 			return;
 		}
 		$version = include $version_file;
 		wp_enqueue_script(
 			'better-file-name-ai',
-			$this->plugin_url . '/index.build.js',
+			$this->plugin_url . '/index.js',
 			$version['dependencies'],
 			$version['version'],
 			[
