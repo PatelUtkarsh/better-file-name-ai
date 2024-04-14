@@ -72,7 +72,7 @@ class Openai_Wrapper {
 				'method'  => 'POST',
 				'headers' => $headers,
 				'body'    => wp_json_encode( $data ),
-				'timeout' => 10,
+				'timeout' => defined( 'WP_CLI' ) && WP_CLI ? 30 : 10,
 			]
 		);
 
