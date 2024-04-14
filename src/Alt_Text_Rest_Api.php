@@ -53,28 +53,10 @@ class Alt_Text_Rest_Api {
 
 		$post_id = $request->get_param( 'mediaId' );
 
-		$uploads  = wp_get_upload_dir();
-		$base_dir = $uploads['basedir'];
-
-		if ( wp_get_environment_type() !== 'production' ) {
-			$attachment_data = wp_get_attachment_metadata( $post_id );
-			if ( ! isset( $attachment_data['file'] ) ) {
-				return new WP_REST_Response( [ 'error' => 'Attachment file not found' ], 404 );
-			}
-			$file_path = str_replace( basename( $attachment_data['file'] ), '', $attachment_data['file'] );
-			if ( isset( $attachment_data['sizes']['large'] ) ) {
-				$file_path = $base_dir . DIRECTORY_SEPARATOR . $file_path . $attachment_data['sizes']['large']['file'];
-			} else {
-				$file_path = $base_dir . DIRECTORY_SEPARATOR . $attachment_data['file'];
-			}
-		} else {
-			[ $file_path ] = image_downsize( $post_id, 'thumbnail' );
-			if ( ! $file_path ) {
-				[ $file_path ] = image_downsize( $post_id, 'large' );
-			}
-			if ( ! $file_path ) {
-				$file_path = wp_get_attachment_url( $post_id );
-			}
+		$file_path = new File_Path();
+		$file_path = $file_path->get_image_path( $post_id );
+		if ( $file_path === null ) {
+			return new WP_REST_Response( [ 'error' => 'Attachment file not found.' ], 404 );
 		}
 		try {
 			if ( ! empty( $file_path ) ) {

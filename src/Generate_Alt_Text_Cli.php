@@ -56,36 +56,16 @@ class Generate_Alt_Text_Cli {
 		WP_CLI::log( 'Found ' . count( $attachment_ids ) . ' attachments without alt text.' );
 
 		$attachment_ids_chunks = array_chunk( $attachment_ids, 50 );
-		$uploads               = wp_get_upload_dir();
-		$base_dir              = $uploads['basedir'];
 		unset( $attachment_ids, $query, $uploads );
 
 		$open_ai_wrapper = new Openai_Wrapper( $setting->get_openai_api_key(), $setting->get_dell_e_version() );
 
+		$file_path                = new File_Path();
 		$generated_alt_text_count = 0;
 		foreach ( $attachment_ids_chunks as $attachment_ids ) {
 			foreach ( $attachment_ids as $post_id ) {
 				WP_CLI::log( 'Processing attachment ID: ' . $post_id );
-				if ( wp_get_environment_type() !== 'production' || $use === 'data' ) {
-					$attachment_data = wp_get_attachment_metadata( $post_id );
-					if ( ! isset( $attachment_data['file'] ) ) {
-						continue;
-					}
-					$file_path = str_replace( basename( $attachment_data['file'] ), '', $attachment_data['file'] );
-					if ( isset( $attachment_data['sizes']['large'] ) ) {
-						$file_path = $base_dir . DIRECTORY_SEPARATOR . $file_path . $attachment_data['sizes']['large']['file'];
-					} else {
-						$file_path = $base_dir . DIRECTORY_SEPARATOR . $attachment_data['file'];
-					}
-				} else {
-					[ $file_path ] = image_downsize( $post_id, 'thumbnail' );
-					if ( ! $file_path ) {
-						[ $file_path ] = image_downsize( $post_id, 'large' );
-					}
-					if ( ! $file_path ) {
-						$file_path = wp_get_attachment_url( $post_id );
-					}
-				}
+				$file_path = $file_path->get_image_path( $post_id );
 				if ( ! $dry_run && $setting->get_openai_api_key() ) {
 					try {
 						if ( ! empty( $file_path ) ) {
