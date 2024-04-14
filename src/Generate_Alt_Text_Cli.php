@@ -56,11 +56,11 @@ class Generate_Alt_Text_Cli {
 		WP_CLI::log( 'Found ' . count( $attachment_ids ) . ' attachments without alt text.' );
 
 		$attachment_ids_chunks = array_chunk( $attachment_ids, 50 );
-		unset( $attachment_ids, $query, $uploads );
+		unset( $attachment_ids, $query );
 
 		$open_ai_wrapper = new Openai_Wrapper( $setting->get_openai_api_key(), $setting->get_dell_e_version() );
 
-		$file_path                = new File_Path();
+		$file_path                = new File_Path( $use );
 		$generated_alt_text_count = 0;
 		foreach ( $attachment_ids_chunks as $attachment_ids ) {
 			foreach ( $attachment_ids as $post_id ) {

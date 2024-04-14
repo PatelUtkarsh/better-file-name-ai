@@ -6,13 +6,13 @@ class File_Path {
 
 	private string $base_dir;
 
-	public function __construct() {
+	public function __construct( private readonly string $use_path = '' ) {
 		$uploads        = wp_get_upload_dir();
 		$this->base_dir = $uploads['basedir'];
 	}
 
 	public function get_image_path( $post_id ): ?string {
-		if ( wp_get_environment_type() !== 'production' ) {
+		if ( wp_get_environment_type() !== 'production' || $this->use_path === 'local' ) {
 			$attachment_data = wp_get_attachment_metadata( $post_id );
 			if ( ! isset( $attachment_data['file'] ) ) {
 				return null;
