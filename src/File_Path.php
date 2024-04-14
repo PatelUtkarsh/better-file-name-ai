@@ -1,4 +1,5 @@
 <?php
+declare( strict_types=1 );
 
 namespace Better_File_Name_Ai;
 
