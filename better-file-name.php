@@ -34,6 +34,7 @@ if ( ! class_exists( 'Better_File_Name_Ai\\Settings' ) ) {
 $better_file_name_settings              = new Settings();
 $better_file_name_admin                 = new Admin( $better_file_name_settings, plugins_url( 'build', __FILE__ ) );
 $better_file_name_dalle_image_generator = new Dalle_Image_Generator( $better_file_name_settings );
+$better_file_name_alt_text_rest_api     = new Better_File_Name_Ai\Alt_Text_Rest_Api( $better_file_name_settings );
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	\WP_CLI::add_command( 'better-file-name generate-alt-text', Better_File_Name_Ai\Generate_Alt_Text_Cli::class );

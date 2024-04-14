@@ -12,15 +12,15 @@ Rename file idea for WordPress was originally purposed by [Pascal Birchler](http
 	</a>
 </div>
 
-
 ### Additional features:
-- Allows generating featured image using dall-e-2 or dall-e-3 API.
+
+-   Allows generating featured image using dall-e-2 or dall-e-3 API.
 
 > Note: GPT-4 Vision is in preview, It is not recommended to use this plugin on a production site.
 
 ## Demo:
-https://github.com/PatelUtkarsh/better-file-name-ai/assets/5015489/1f0ce636-ceeb-4e6e-918b-872d3069d40f
 
+https://github.com/PatelUtkarsh/better-file-name-ai/assets/5015489/1f0ce636-ceeb-4e6e-918b-872d3069d40f
 
 ## Installation
 

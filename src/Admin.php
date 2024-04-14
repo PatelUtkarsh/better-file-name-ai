@@ -23,7 +23,9 @@ class Admin {
 		}
 
 		if ( $this->settings->should_generate_alt_text() ) {
-			add_filter( 'wp_update_attachment_metadata', [ $this, 'update_alt_text' ], 10, 2 );
+			add_filter( 'wp_update_attachment_metadata', $this->update_alt_text( ... ), 10, 2 );
+			add_filter( 'attachment_fields_to_edit', $this->attachment_fields_to_edit( ... ), 10, 2 );
+			add_action( 'wp_enqueue_media', $this->enqueue_media( ... ) );
 		}
 
 		if ( $this->settings->should_integrate_dall_e() ) {
@@ -100,6 +102,51 @@ class Admin {
 			$version['version'],
 			[
 				'in_footer' => true,
+			]
+		);
+	}
+
+	/**
+	 * Add custom field to media attachment
+	 *
+	 * @param array  $form_fields Form fields.
+	 * @param object $post        WP_Post object.
+	 *
+	 * @return array
+	 */
+	public function attachment_fields_to_edit( $form_fields, $post ) {
+		$form_fields['alt-text-generator'] = [
+			'input' => 'html',
+			'html'  => sprintf( '<button class="button generate-alt-text" data-media-id="%d">%s</button>', $post->ID, __( 'Generate alt text', 'better-file-name' ) ),
+			'label' => __( 'Better file name', 'better-file-name' ),
+			'helps' => __( 'Using openai.', 'better-file-name' ),
+		];
+
+		return $form_fields;
+	}
+
+	public function enqueue_media() {
+		$version_file = __DIR__ . '/../build/media-alt-text.asset.php';
+		if ( ! file_exists( $version_file ) ) {
+			return;
+		}
+		$version = include $version_file;
+		wp_enqueue_script(
+			'better-file-name-ai-media',
+			$this->plugin_url . '/media-alt-text.js',
+			$version['dependencies'],
+			$version['version'],
+			[
+				'in_footer' => true,
+			]
+		);
+
+		wp_localize_script(
+			'better-file-name-ai-media',
+			'betterFileName',
+			[
+				'api'   => rest_url( 'better-file-name/v1/alt-text-generator' ),
+				'nonce' => wp_create_nonce( 'wp_rest' ),
 			]
 		);
 	}
