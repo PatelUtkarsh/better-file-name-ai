@@ -20,7 +20,7 @@
 		"@wordpress/scripts": "^26.19.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build js/index.js --output-path=build --output-filename=index.build.js",
+		"build": "wp-scripts build js/* --output-path=build",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses",
 		"format": "wp-scripts format '**/*.{js,jsx,ts,tsx,json,md}'",
@@ -30,7 +30,7 @@
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start js/index.js --output-path=build --output-filename=index.build.js",
+		"start": "wp-scripts start js/* --output-path=build",
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js"
 	}
