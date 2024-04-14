@@ -14,7 +14,7 @@ class Alt_Text_Rest_Api {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
-	public function register_routes() {
+	public function register_routes(): void {
 		register_rest_route(
 			'better-file-name/v1',
 			'/alt-text-generator',
@@ -34,7 +34,7 @@ class Alt_Text_Rest_Api {
 		);
 	}
 
-	public function validate_attachment_id( $param, $_request, $_key ) {
+	public function validate_attachment_id( $param, $_request, $_key ): bool {
 		unset( $_request, $_key );
 		if ( ! is_numeric( $param ) ) {
 			return false;
@@ -43,7 +43,7 @@ class Alt_Text_Rest_Api {
 		return get_post_type( $param ) === 'attachment';
 	}
 
-	public function generate_image_alt_text( $request ) {
+	public function generate_image_alt_text( $request ): WP_REST_Response {
 
 		if ( ! $this->setting->get_openai_api_key() ) {
 			return new WP_REST_Response( [ 'error' => 'OpenAI API key not found' ], 404 );
