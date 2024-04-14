@@ -1,15 +1,16 @@
 === Better File Name Ai ===
 Contributors: utkarshpatel
 Donate link:
-Tags: file names, file name generator, alt text, alt text generator, featured image generator, dall-e
+Tags: file name generator, alt text, alt text generator, featured image generator, dall-e
 Requires at least: 5.0
 Tested up to: 6.4.1
 Requires PHP: 8.1
 Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images.
 
-This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images. Also, Allows generating featured image using dall-e-2 or dall-e-3 API.
+Plugin allows generating featured image using dall-e-2 or dall-e-3 API.
 
 Note: This plugin relies on OpenAI api. Read [terms of service from openai](https://openai.com/policies/terms-of-use) before using this plugin. GPT-4 Vision api is in preview and plugin needs to send small scale image to openai api to generate alt text and file names.
 
