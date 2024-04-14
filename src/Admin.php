@@ -17,6 +17,11 @@ class Admin {
 		if ( ! $this->settings->get_openai_api_key() ) {
 			return;
 		}
+
+		if ( defined( 'WP_IMPORTING' ) && WP_IMPORTING ) {
+			return;
+		}
+
 		if ( $this->settings->get_rename_file() ) {
 			add_filter( 'wp_handle_sideload_prefilter', [ $this, 'rename_new_file' ], 9999 );
 			add_filter( 'wp_handle_upload_prefilter', [ $this, 'rename_new_file' ], 9999 );
