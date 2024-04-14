@@ -2,10 +2,10 @@ name: Plugin asset/readme update
 on:
   push:
     branches:
-      - test/trunk
+      - main
 jobs:
   trunk:
-    name: Push to main
+    name: Update wp.org assets and readme.txt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
