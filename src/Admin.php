@@ -115,6 +115,10 @@ class Admin {
 	 * @return array
 	 */
 	public function attachment_fields_to_edit( $form_fields, $post ) {
+		if ( ! str_starts_with( $post->post_mime_type, 'image' ) ) {
+			return $form_fields;
+		}
+
 		$form_fields['alt-text-generator'] = [
 			'input' => 'html',
 			'html'  => sprintf( '<button class="button generate-alt-text" data-media-id="%d">%s</button><span class="generate-alt-text__loading hidden">%s</span><span class="spinner"></span>', $post->ID, __( 'Generate alt text', 'better-file-name' ), esc_html__( 'Generating alt text...', 'better-file-name' ) ),
