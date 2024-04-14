@@ -19,7 +19,6 @@ domReady( () => {
 				generateAltText.classList.remove( 'hidden' );
 
 				const altText = input.value;
-				return;
 				if ( betterFileName?.api ) {
 					try {
 						const result = await fetch( betterFileName.api, {

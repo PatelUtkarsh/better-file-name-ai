@@ -75,7 +75,7 @@ class Generate_Alt_Text_Cli {
 					if ( isset( $attachment_data['sizes']['large'] ) ) {
 						$file_path = $base_dir . DIRECTORY_SEPARATOR . $file_path . $attachment_data['sizes']['large']['file'];
 					} else {
-						$file_path = $base_dir . DIRECTORY_SEPARATOR . $file_path . $attachment_data['file'];
+						$file_path = $base_dir . DIRECTORY_SEPARATOR . $attachment_data['file'];
 					}
 				} else {
 					[ $file_path ] = image_downsize( $post_id, 'thumbnail' );
