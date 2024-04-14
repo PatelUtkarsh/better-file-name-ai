@@ -42,7 +42,7 @@ domReady( () => {
 							input.dispatchEvent( event );
 						}
 					} catch ( error ) {
-						console.error( 'Error:', error );
+						console.error( 'Error:', error ); // eslint-disable-line no-console
 					} finally {
 						generateAltText.classList.add( 'hidden' );
 						spinner.style.visibility = 'hidden';
