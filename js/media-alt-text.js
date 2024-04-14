@@ -33,11 +33,11 @@ domReady( () => {
 				const data = await result.json();
 				if ( data.alt_text ) {
 					input.value = data.alt_text;
-					const event = new Event( 'change', {
+					const textChangeEvent = new Event( 'change', {
 						bubbles: true,
 						cancelable: true,
 					} );
-					input.dispatchEvent( event );
+					input.dispatchEvent( textChangeEvent );
 				}
 			} catch ( error ) {
 				console.error( 'Error:', error ); // eslint-disable-line no-console
