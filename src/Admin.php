@@ -117,9 +117,8 @@ class Admin {
 	public function attachment_fields_to_edit( $form_fields, $post ) {
 		$form_fields['alt-text-generator'] = [
 			'input' => 'html',
-			'html'  => sprintf( '<button class="button generate-alt-text" data-media-id="%d">%s</button>', $post->ID, __( 'Generate alt text', 'better-file-name' ) ),
-			'label' => __( 'Better file name', 'better-file-name' ),
-			'helps' => __( 'Using openai.', 'better-file-name' ),
+			'html'  => sprintf( '<button class="button generate-alt-text" data-media-id="%d">%s</button><span class="generate-alt-text__loading hidden">%s</span><span class="spinner"></span>', $post->ID, __( 'Generate alt text', 'better-file-name' ), esc_html__( 'Generating alt text...', 'better-file-name' ) ),
+			'label' => '',
 		];
 
 		return $form_fields;
