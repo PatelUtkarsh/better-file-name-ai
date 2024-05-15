@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Better File Name
  * Plugin URI:      github.com/patelutkarsh/better-file-name
- * Description:     MVP plugin to rename uploaded file to more meaningful name using OpenAI.
+ * Description:     Rename newly uploaded file to more meaningful name, generate alt text and featured images.
  * Author:          Utkarsh
  * Author URI:      github.com/patelutkarsh
  * Text Domain:     better-file-name
