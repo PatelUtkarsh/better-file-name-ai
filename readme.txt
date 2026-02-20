@@ -5,7 +5,7 @@ Tags: file name generator, alt text, alt text generator, featured image generato
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 8.1
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 This WordPress plugin renames files to be more readable using OpenAI (gpt-4.1-mini) upon upload and generates accessible alt text for images.

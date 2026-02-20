@@ -6,7 +6,7 @@
  * Author:          Utkarsh
  * Author URI:      github.com/patelutkarsh
  * Text Domain:     better-file-name
- * Version:         1.4.2
+ * Version:         1.5.0
  * Requires PHP:    8.1
  * License:         GPL-2.0-or-later
  *
