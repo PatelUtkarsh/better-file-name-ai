@@ -46,7 +46,7 @@ class Dalle_Image_Generator {
 
 		register_rest_route(
 			'better-file-name/v1',
-			'/image-job-status/(?P<job_id>[a-f0-9]+)',
+			'/image-job-status/(?P<job_id>[a-zA-Z0-9]+)',
 			[
 				'methods'             => 'GET',
 				'callback'            => $this->get_job_status( ... ),
@@ -57,7 +57,7 @@ class Dalle_Image_Generator {
 					'job_id' => [
 						'required'          => true,
 						'validate_callback' => function ( $param ) {
-							return is_string( $param ) && preg_match( '/^[a-f0-9]+$/', $param );
+							return is_string( $param ) && preg_match( '/^[a-zA-Z0-9]+$/', $param );
 						},
 					],
 				],
