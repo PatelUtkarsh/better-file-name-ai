@@ -35,6 +35,7 @@
 		"start": "wp-scripts start js/* --output-path=build",
 		"test:e2e": "wp-scripts test-e2e",
 		"test:unit": "wp-scripts test-unit-js",
-		"wp-env": "wp-env"
+		"wp-env": "wp-env",
+		"process-jobs": "wp-env run cli wp action-scheduler run"
 	}
 }
