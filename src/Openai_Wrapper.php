@@ -7,10 +7,12 @@ class Openai_Wrapper {
 
 	public string $dall_e_version;
 	private string $openai_api_key;
+	private string $vision_model;
 
-	public function __construct( $openai_api_key, $dall_e_version ) {
+	public function __construct( $openai_api_key, $dall_e_version, $vision_model = 'gpt-4.1-mini' ) {
 		$this->openai_api_key = $openai_api_key;
 		$this->dall_e_version = $dall_e_version;
+		$this->vision_model   = $vision_model;
 	}
 
 	public function get_filename( string $path ): string {
@@ -102,7 +104,7 @@ class Openai_Wrapper {
 		}
 
 		$data = [
-			'model'                 => 'gpt-4.1-mini',
+			'model'                 => $this->vision_model,
 			'messages'              => [
 				[
 					'role'    => 'user',

@@ -52,7 +52,7 @@ class Dalle_Image_Generator {
 		$prompt       = $request->get_param( 'prompt' );
 
 		try {
-			$wrapper       = new Openai_Wrapper( $this->setting->get_openai_api_key(), $this->setting->get_dell_e_version() );
+			$wrapper       = new Openai_Wrapper( $this->setting->get_openai_api_key(), $this->setting->get_dell_e_version(), $this->setting->get_vision_model() );
 			$url           = $wrapper->generate_image( $prompt, $post_title, $post_content );
 			$attachment_id = $this->save_image_as_attachment( $url );
 		} catch ( \Exception $e ) {
