@@ -27,6 +27,12 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
 
+// Load Action Scheduler for async background processing (not autoloaded by Composer).
+$better_file_name_action_scheduler = __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+if ( file_exists( $better_file_name_action_scheduler ) ) {
+	require_once $better_file_name_action_scheduler;
+}
+
 if ( ! class_exists( 'Better_File_Name_Ai\\Settings' ) ) {
 	throw new \Exception( esc_html__( 'Could not find vendor/autoload.php, make sure you ran composer.', 'better-file-name' ) );
 }

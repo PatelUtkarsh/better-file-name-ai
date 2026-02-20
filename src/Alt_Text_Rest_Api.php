@@ -49,7 +49,7 @@ class Alt_Text_Rest_Api {
 			return new WP_REST_Response( [ 'error' => 'OpenAI API key not found' ], 404 );
 		}
 
-		$open_ai_wrapper = new Openai_Wrapper( $this->setting->get_openai_api_key(), $this->setting->get_dell_e_version(), $this->setting->get_vision_model() );
+		$open_ai_wrapper = new Openai_Wrapper( $this->setting->get_openai_api_key(), $this->setting->get_vision_model() );
 
 		$post_id = $request->get_param( 'mediaId' );
 

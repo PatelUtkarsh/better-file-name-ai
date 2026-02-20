@@ -13,7 +13,9 @@ class Settings {
 
 	public bool $dell_e_integration;
 
-	public string $dell_e_version;
+	public string $image_model;
+
+	public string $image_quality;
 
 	public string $vision_model;
 
@@ -23,9 +25,26 @@ class Settings {
 
 	const ALT_TEXT = 'better_file_name_alt_text';
 
-	const DELL_E_INTEGRATION = 'better_file_name_dell_e_integration';
+	const IMAGE_GENERATION = 'better_file_name_image_generation';
 
-	const DELL_E_VERSION = 'better_file_name_dell_e_version';
+	const IMAGE_MODEL = 'better_file_name_image_model';
+
+	const IMAGE_MODEL_DEFAULT = 'gpt-image-1';
+
+	const IMAGE_MODELS = [
+		'gpt-image-1'      => 'GPT Image 1 (Recommended)',
+		'gpt-image-1-mini' => 'GPT Image 1 Mini (Cheapest)',
+	];
+
+	const IMAGE_QUALITY = 'better_file_name_image_quality';
+
+	const IMAGE_QUALITY_DEFAULT = 'medium';
+
+	const IMAGE_QUALITIES = [
+		'low'    => 'Low (Fastest)',
+		'medium' => 'Medium (Recommended)',
+		'high'   => 'High (Best quality)',
+	];
 
 	const VISION_MODEL = 'better_file_name_vision_model';
 
@@ -43,8 +62,9 @@ class Settings {
 		$this->should_rename_file       = (bool) get_option( self::RENAME_NEW_FILE, true );
 		$this->openai_api_key           = get_option( self::OPENAI_API_KEY, '' );
 		$this->should_generate_alt_text = (bool) get_option( self::ALT_TEXT, true );
-		$this->dell_e_integration       = (bool) get_option( self::DELL_E_INTEGRATION, true );
-		$this->dell_e_version           = get_option( self::DELL_E_VERSION, 'dall-e-2' );
+		$this->dell_e_integration       = (bool) get_option( self::IMAGE_GENERATION, true );
+		$this->image_model              = get_option( self::IMAGE_MODEL, self::IMAGE_MODEL_DEFAULT );
+		$this->image_quality            = get_option( self::IMAGE_QUALITY, self::IMAGE_QUALITY_DEFAULT );
 		$this->vision_model             = get_option( self::VISION_MODEL, self::VISION_MODEL_DEFAULT );
 
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
@@ -83,19 +103,19 @@ class Settings {
 		register_setting( 'better_file_name_settings_group', self::RENAME_NEW_FILE, [ 'sanitize_callback' => 'intval' ] );
 		register_setting( 'better_file_name_settings_group', self::OPENAI_API_KEY, [ 'sanitize_callback' => 'sanitize_text_field' ] );
 		register_setting( 'better_file_name_settings_group', self::ALT_TEXT, [ 'sanitize_callback' => 'intval' ] );
-		register_setting( 'better_file_name_settings_group', self::DELL_E_INTEGRATION, [ 'sanitize_callback' => 'intval' ] );
+		register_setting( 'better_file_name_settings_group', self::IMAGE_GENERATION, [ 'sanitize_callback' => 'intval' ] );
 		register_setting(
 			'better_file_name_settings_group',
-			self::DELL_E_VERSION,
+			self::IMAGE_MODEL,
 			[
-				'sanitize_callback' => fn( $v ) => in_array(
-					$v,
-					[
-						'dall-e-3',
-						'dall-e-2',
-					],
-					true
-				) ? $v : '',
+				'sanitize_callback' => fn( $v ) => array_key_exists( $v, self::IMAGE_MODELS ) ? $v : self::IMAGE_MODEL_DEFAULT,
+			]
+		);
+		register_setting(
+			'better_file_name_settings_group',
+			self::IMAGE_QUALITY,
+			[
+				'sanitize_callback' => fn( $v ) => array_key_exists( $v, self::IMAGE_QUALITIES ) ? $v : self::IMAGE_QUALITY_DEFAULT,
 			]
 		);
 		$section = 'better_file_name_section';
@@ -127,29 +147,42 @@ class Settings {
 			]
 		);
 		add_settings_field(
-			self::DELL_E_INTEGRATION,
-			esc_html__( 'Dell-e integration with featured image', 'better-file-name' ),
+			self::IMAGE_GENERATION,
+			esc_html__( 'Image generation with featured image', 'better-file-name' ),
 			[
 				$this,
-				'generate_dall_e_callback',
+				'image_generation_callback',
 			],
 			'better_file_name_settings',
 			$section,
 			[
-				'label_for' => self::DELL_E_INTEGRATION,
+				'label_for' => self::IMAGE_GENERATION,
 			]
 		);
 		add_settings_field(
-			self::DELL_E_VERSION,
-			esc_html__( 'DELL E Version', 'better-file-name' ),
+			self::IMAGE_MODEL,
+			esc_html__( 'Image Generation Model', 'better-file-name' ),
 			[
 				$this,
-				'generate_dall_e_version_dropdown_callback',
+				'image_model_dropdown_callback',
 			],
 			'better_file_name_settings',
 			$section,
 			[
-				'label_for' => self::DELL_E_VERSION,
+				'label_for' => self::IMAGE_MODEL,
+			]
+		);
+		add_settings_field(
+			self::IMAGE_QUALITY,
+			esc_html__( 'Image Generation Quality', 'better-file-name' ),
+			[
+				$this,
+				'image_quality_dropdown_callback',
+			],
+			'better_file_name_settings',
+			$section,
+			[
+				'label_for' => self::IMAGE_QUALITY,
 			]
 		);
 		$section_api = 'better_file_name_section_api';
@@ -208,21 +241,29 @@ class Settings {
 		printf( '<input type="checkbox" name="%1$s" id="%1$s" value="1" %2$s />', self::ALT_TEXT, checked( $this->should_generate_alt_text(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
-	public function generate_dall_e_callback(): void {
-		printf( '<input type="checkbox" name="%1$s" id="%1$s" value="1" %2$s />', self::DELL_E_INTEGRATION, checked( $this->should_integrate_dall_e(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	public function image_generation_callback(): void {
+		printf( '<input type="checkbox" name="%1$s" id="%1$s" value="1" %2$s />', self::IMAGE_GENERATION, checked( $this->should_integrate_image_generation(), true, false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
-	public function generate_dall_e_version_dropdown_callback() {
-		$versions = [
-			'dall-e-2' => 'Dall-e-2',
-			'dall-e-3' => 'Dall-e-3',
-		];
+	public function image_model_dropdown_callback(): void {
 		?>
-		<select name="<?php echo esc_attr( self::DELL_E_VERSION ); ?>"
-				id="<?php echo esc_attr( self::DELL_E_VERSION ); ?>">
-			<?php foreach ( $versions as $key => $version ) : ?>
+		<select name="<?php echo esc_attr( self::IMAGE_MODEL ); ?>"
+				id="<?php echo esc_attr( self::IMAGE_MODEL ); ?>">
+			<?php foreach ( self::IMAGE_MODELS as $key => $label ) : ?>
 				<option
-					value="<?php echo esc_attr( $key ); ?>" <?php selected( $this->dell_e_version, $key ); ?>><?php echo esc_html( $version ); ?></option>
+					value="<?php echo esc_attr( $key ); ?>" <?php selected( $this->image_model, $key ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<?php
+	}
+
+	public function image_quality_dropdown_callback(): void {
+		?>
+		<select name="<?php echo esc_attr( self::IMAGE_QUALITY ); ?>"
+				id="<?php echo esc_attr( self::IMAGE_QUALITY ); ?>">
+			<?php foreach ( self::IMAGE_QUALITIES as $key => $label ) : ?>
+				<option
+					value="<?php echo esc_attr( $key ); ?>" <?php selected( $this->image_quality, $key ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
 		</select>
 		<?php
@@ -240,12 +281,16 @@ class Settings {
 		return $this->should_generate_alt_text;
 	}
 
-	public function should_integrate_dall_e(): bool {
+	public function should_integrate_image_generation(): bool {
 		return $this->dell_e_integration;
 	}
 
-	public function get_dell_e_version(): string {
-		return $this->dell_e_version;
+	public function get_image_model(): string {
+		return $this->image_model;
+	}
+
+	public function get_image_quality(): string {
+		return $this->image_quality;
 	}
 
 	public function get_vision_model(): string {

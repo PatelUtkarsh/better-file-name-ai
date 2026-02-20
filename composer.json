@@ -31,5 +31,8 @@
 			"phpstan analyse"
 		],
 		"format": "phpcbf --standard=.phpcs.xml.dist"
+	},
+	"require": {
+		"woocommerce/action-scheduler": "^3.9"
 	}
 }
