@@ -14,19 +14,79 @@ class Openai_Wrapper {
 	}
 
 	public function get_filename( string $path ): string {
-		return $this->request( $path, __( 'What would a good, short, dash separator filename be for this image? Only reply with the filename.', 'better-file-name' ) );
+		$schema = [
+			'type'        => 'json_schema',
+			'json_schema' => [
+				'name'   => 'filename_response',
+				'strict' => true,
+				'schema' => [
+					'type'                 => 'object',
+					'properties'           => [
+						'filename' => [
+							'type'        => 'string',
+							'description' => 'A short, descriptive, dash-separated filename without extension.',
+						],
+					],
+					'required'             => [ 'filename' ],
+					'additionalProperties' => false,
+				],
+			],
+		];
+
+		$response = $this->request(
+			$path,
+			__( 'What would a good, short, dash-separated filename be for this image? Return only the filename without any file extension.', 'better-file-name' ),
+			$schema
+		);
+
+		$decoded = json_decode( $response, true );
+		if ( $decoded && isset( $decoded['filename'] ) ) {
+			return sanitize_file_name( $decoded['filename'] );
+		}
+
+		return sanitize_file_name( $response );
 	}
 
 	public function get_alt_text( string $path ): string {
-		$text = $this->request( $path, __( 'Please provide the alt text for this image, ensuring it describes the content comprehensively for individuals who cannot see it. Only reply output.', 'better-file-name' ) );
-		if ( str_starts_with( $text, 'Alt text: ' ) ) {
-			return str_replace( 'Alt text: ', '', $text );
+		$schema = [
+			'type'        => 'json_schema',
+			'json_schema' => [
+				'name'   => 'alt_text_response',
+				'strict' => true,
+				'schema' => [
+					'type'                 => 'object',
+					'properties'           => [
+						'alt_text' => [
+							'type'        => 'string',
+							'description' => 'Descriptive alt text for the image for accessibility.',
+						],
+					],
+					'required'             => [ 'alt_text' ],
+					'additionalProperties' => false,
+				],
+			],
+		];
+
+		$response = $this->request(
+			$path,
+			__( 'Please provide the alt text for this image, ensuring it describes the content comprehensively for individuals who cannot see it.', 'better-file-name' ),
+			$schema
+		);
+
+		$decoded = json_decode( $response, true );
+		if ( $decoded && isset( $decoded['alt_text'] ) ) {
+			return $decoded['alt_text'];
 		}
 
-		return $text;
+		// Fallback: strip prefix if model didn't use structured output.
+		if ( str_starts_with( $response, 'Alt text: ' ) ) {
+			return str_replace( 'Alt text: ', '', $response );
+		}
+
+		return $response;
 	}
 
-	public function request( string $path, string $prompt ): string {
+	public function request( string $path, string $prompt, ?array $response_format = null ): string {
 
 		if ( ! $this->openai_api_key ) {
 			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name' ) );
@@ -63,6 +123,10 @@ class Openai_Wrapper {
 			],
 			'max_completion_tokens' => 1024,
 		];
+
+		if ( $response_format ) {
+			$data['response_format'] = $response_format;
+		}
 
 		$headers = [
 			'Authorization' => 'Bearer ' . $this->openai_api_key,
