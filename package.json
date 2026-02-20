@@ -16,6 +16,7 @@
 		"url": "https://github.com/PatelUtkarsh/better-file-name-ai/issues"
 	},
 	"homepage": "https://github.com/PatelUtkarsh/better-file-name-ai#readme",
+	"packageManager": "pnpm@10.29.3",
 	"devDependencies": {
 		"@wordpress/env": "^11.0.0",
 		"@wordpress/scripts": "^31.5.0"
