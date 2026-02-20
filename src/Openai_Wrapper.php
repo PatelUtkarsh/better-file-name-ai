@@ -42,8 +42,8 @@ class Openai_Wrapper {
 		}
 
 		$data = [
-			'model'      => 'gpt-4-vision-preview',
-			'messages'   => [
+			'model'                 => 'gpt-4.1-mini',
+			'messages'              => [
 				[
 					'role'    => 'user',
 					'content' => [
@@ -53,12 +53,15 @@ class Openai_Wrapper {
 						],
 						[
 							'type'      => 'image_url',
-							'image_url' => [ 'url' => $image_url ],
+							'image_url' => [
+								'url'    => $image_url,
+								'detail' => 'low',
+							],
 						],
 					],
 				],
 			],
-			'max_tokens' => 1024,
+			'max_completion_tokens' => 1024,
 		];
 
 		$headers = [
@@ -80,12 +83,15 @@ class Openai_Wrapper {
 			throw new \Exception( esc_html( implode( ', ', $request->get_error_messages() ) ) );
 		}
 
-		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {
-			throw new \Exception( esc_html__( 'Unable to get filename from OpenAI', 'better-file-name' ) );
-		}
-
 		$response = wp_remote_retrieve_body( $request );
 		$result   = json_decode( $response, true );
+
+		if ( 200 !== wp_remote_retrieve_response_code( $request ) ) {
+			$message = isset( $result['error']['message'] )
+				? esc_html( $result['error']['message'] )
+				: esc_html__( 'Unable to get response from OpenAI', 'better-file-name' );
+			throw new \Exception( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- $message is already escaped above.
+		}
 
 		if ( $result && isset( $result['choices'][0]['message']['content'] ) ) {
 			return $result['choices'][0]['message']['content'];

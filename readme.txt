@@ -8,11 +8,11 @@ Requires PHP: 8.1
 Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-This WordPress plugin renames files to be more readable using an open API (gpt-4-vision) upon upload and generates accessible alt text for images.
+This WordPress plugin renames files to be more readable using OpenAI (gpt-4.1-mini) upon upload and generates accessible alt text for images.
 
 Plugin allows generating featured image using dall-e-2 or dall-e-3 API.
 
-Note: This plugin relies on OpenAI api. Read [terms of service from openai](https://openai.com/policies/terms-of-use) before using this plugin. GPT-4 Vision api is in preview and plugin needs to send small scale image to openai api to generate alt text and file names.
+Note: This plugin relies on the OpenAI API. Read [terms of service from OpenAI](https://openai.com/policies/terms-of-use) before using this plugin. The plugin sends a low-resolution image to the OpenAI API to generate alt text and file names.
 
 You must have an OpenAI account and generate an API key to use this plugin. You can sign up for an account [here](https://platform.openai.com/account/api-keys/).
 
@@ -40,7 +40,7 @@ Run following command to generate alt text for all images that do not have any.
 
 This can take a while depending on the number of images on your site.
 
-== Screenshots ==
+== Demo ==
 
 [Demo of featured image generation using Dall-E 2](https://p.utkarsh.workers.dev/demo-TfVNE.mp4)
 
