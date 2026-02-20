@@ -31,6 +31,7 @@ multisite.xml.dist
 phpcs.xml
 .phpcs.xml.dist
 phpcs.xml.dist
+AGENTS.md
 README.md
 webpack.config.js
 wp-cli.local.yml
