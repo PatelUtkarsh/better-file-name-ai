@@ -15,6 +15,8 @@ class Settings {
 
 	public string $dell_e_version;
 
+	public string $vision_model;
+
 	const RENAME_NEW_FILE = 'rename_new_file';
 
 	const OPENAI_API_KEY = 'better_file_name_api_key';
@@ -25,6 +27,17 @@ class Settings {
 
 	const DELL_E_VERSION = 'better_file_name_dell_e_version';
 
+	const VISION_MODEL = 'better_file_name_vision_model';
+
+	const VISION_MODEL_DEFAULT = 'gpt-4.1-mini';
+
+	const VISION_MODELS = [
+		'gpt-4.1-mini' => 'GPT-4.1 Mini (Recommended)',
+		'gpt-4.1-nano' => 'GPT-4.1 Nano (Cheapest)',
+		'gpt-4o-mini'  => 'GPT-4o Mini',
+		'gpt-4.1'      => 'GPT-4.1 (Most capable)',
+	];
+
 	public function __construct() {
 
 		$this->should_rename_file       = (bool) get_option( self::RENAME_NEW_FILE, true );
@@ -32,6 +45,7 @@ class Settings {
 		$this->should_generate_alt_text = (bool) get_option( self::ALT_TEXT, true );
 		$this->dell_e_integration       = (bool) get_option( self::DELL_E_INTEGRATION, true );
 		$this->dell_e_version           = get_option( self::DELL_E_VERSION, 'dall-e-2' );
+		$this->vision_model             = get_option( self::VISION_MODEL, self::VISION_MODEL_DEFAULT );
 
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -153,6 +167,26 @@ class Settings {
 				'label_for' => self::OPENAI_API_KEY,
 			]
 		);
+		register_setting(
+			'better_file_name_settings_group',
+			self::VISION_MODEL,
+			[
+				'sanitize_callback' => fn( $v ) => array_key_exists( $v, self::VISION_MODELS ) ? $v : self::VISION_MODEL_DEFAULT,
+			]
+		);
+		add_settings_field(
+			self::VISION_MODEL,
+			esc_html__( 'Vision Model', 'better-file-name' ),
+			[
+				$this,
+				'vision_model_dropdown_callback',
+			],
+			'better_file_name_settings',
+			$section_api,
+			[
+				'label_for' => self::VISION_MODEL,
+			]
+		);
 	}
 
 	public function rename_new_file_callback(): void {
@@ -212,5 +246,21 @@ class Settings {
 
 	public function get_dell_e_version(): string {
 		return $this->dell_e_version;
+	}
+
+	public function get_vision_model(): string {
+		return $this->vision_model;
+	}
+
+	public function vision_model_dropdown_callback(): void {
+		?>
+		<select name="<?php echo esc_attr( self::VISION_MODEL ); ?>"
+				id="<?php echo esc_attr( self::VISION_MODEL ); ?>">
+			<?php foreach ( self::VISION_MODELS as $key => $label ) : ?>
+				<option
+					value="<?php echo esc_attr( $key ); ?>" <?php selected( $this->vision_model, $key ); ?>><?php echo esc_html( $label ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<?php
 	}
 }
