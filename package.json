@@ -17,7 +17,8 @@
 	},
 	"homepage": "https://github.com/PatelUtkarsh/better-file-name-ai#readme",
 	"devDependencies": {
-		"@wordpress/scripts": "^26.19.0"
+		"@wordpress/env": "^11.0.0",
+		"@wordpress/scripts": "^31.5.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build js/* --output-path=build",
@@ -32,6 +33,7 @@
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start js/* --output-path=build",
 		"test:e2e": "wp-scripts test-e2e",
-		"test:unit": "wp-scripts test-unit-js"
+		"test:unit": "wp-scripts test-unit-js",
+		"wp-env": "wp-env"
 	}
 }

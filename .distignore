@@ -23,6 +23,8 @@ dependencies.yml
 Gruntfile.js
 package.json
 package-lock.json
+pnpm-lock.yaml
+.wp-env.json
 phpunit.xml
 phpunit.xml.dist
 multisite.xml
