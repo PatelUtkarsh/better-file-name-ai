@@ -5,13 +5,11 @@ namespace Better_File_Name_Ai;
 
 class Openai_Wrapper {
 
-	public string $dall_e_version;
 	private string $openai_api_key;
 	private string $vision_model;
 
-	public function __construct( $openai_api_key, $dall_e_version, $vision_model = 'gpt-4.1-mini' ) {
+	public function __construct( string $openai_api_key, string $vision_model = 'gpt-4.1-mini' ) {
 		$this->openai_api_key = $openai_api_key;
-		$this->dall_e_version = $dall_e_version;
 		$this->vision_model   = $vision_model;
 	}
 
@@ -185,60 +183,31 @@ class Openai_Wrapper {
 		return "data:$type;base64," . $base64_data;
 	}
 
-	public function generate_image( $prompt, $title = '', $content = '' ) {
-		$parameters = [
-			'dall-e-2' => [
-				'length' => 1000 - 100,
-				'size'   => '1024x1024',
-			],
-			'dall-e-3' => [
-				'length' => 4000 - 100,
-				'size'   => '1792x1024',  // 7:4 aspect ratio is highest quality supported.
-			],
-		];
-
-		$current_parameters = $parameters[ $this->dall_e_version ];
+	public function generate_image( string $prompt, string $title = '', string $content = '', string $model = 'gpt-image-1', string $quality = 'medium' ): string {
+		if ( ! $this->openai_api_key ) {
+			throw new \Exception( esc_html__( 'OpenAI API Key not set', 'better-file-name' ) );
+		}
 
 		$content_without_tag = wp_strip_all_tags( $content );
 
-		if ( $this->dall_e_version === 'dall-e-3' ) {
-			$prompt_data = wp_json_encode(
-				[
-					'user_prompt' => $prompt,
-					'title'       => $title,
-					'content'     => $content_without_tag,
-				]
-			);
-		} else {
-			$prompt_data = wp_json_encode(
-				[
-					'user_prompt' => $prompt,
-					'title'       => $title,
-				]
-			);
+		$full_prompt = $prompt;
+		if ( ! empty( $title ) ) {
+			$full_prompt .= "\n\nTitle: " . $title;
 		}
-
-		if ( strlen( $prompt ) > $current_parameters['length'] && $this->dall_e_version === 'dall-e-3' ) {
-			$excess_length            = strlen( $prompt ) - $current_parameters['length'];
-			$truncated_content_length = strlen( $content_without_tag ) - $excess_length;
-			$truncated_content_length = max( $truncated_content_length, 0 );
-			$truncated_content        = substr( $content_without_tag, 0, $truncated_content_length );
-			$prompt_data              = wp_json_encode(
-				[
-					'user_prompt' => $prompt,
-					'title'       => $title,
-					'content'     => $truncated_content,
-				]
-			);
+		if ( ! empty( $content_without_tag ) ) {
+			// gpt-image-1 supports up to 32K chars, truncate conservatively at 16K.
+			$truncated_content = mb_substr( $content_without_tag, 0, 16000 );
+			$full_prompt      .= "\n\nContent: " . $truncated_content;
 		}
 
 		$body = wp_json_encode(
 			[
-				'model'   => $this->dall_e_version,
-				'prompt'  => wp_json_encode( $prompt_data ),
-				'quality' => 'hd',
-				'n'       => 1,
-				'size'    => $current_parameters['size'],
+				'model'         => $model,
+				'prompt'        => $full_prompt,
+				'quality'       => $quality,
+				'n'             => 1,
+				'size'          => '1536x1024',
+				'output_format' => 'jpeg',
 			]
 		);
 
@@ -250,17 +219,26 @@ class Openai_Wrapper {
 					'Content-Type'  => 'application/json',
 				],
 				'body'    => $body,
-				'timeout' => '120',
+				'timeout' => 180,
 			]
 		);
 
-		if ( ! is_wp_error( $response ) ) {
-			$data = json_decode( wp_remote_retrieve_body( $response ), true );
-			if ( isset( $data['data'][0]['url'] ) ) {
-				return $data['data'][0]['url'];
-			} elseif ( isset( $data['error']['message'] ) ) {
-				throw new \Exception( esc_html( $data['error']['message'] ) );
-			}
+		if ( is_wp_error( $response ) ) {
+			throw new \Exception( esc_html( implode( ', ', $response->get_error_messages() ) ) );
+		}
+
+		$status_code = wp_remote_retrieve_response_code( $response );
+		$data        = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 200 !== $status_code ) {
+			$message = isset( $data['error']['message'] )
+				? esc_html( $data['error']['message'] )
+				: esc_html__( 'Unable to generate image from OpenAI', 'better-file-name' );
+			throw new \Exception( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- $message is already escaped above.
+		}
+
+		if ( isset( $data['data'][0]['b64_json'] ) ) {
+			return $data['data'][0]['b64_json'];
 		}
 
 		throw new \Exception( esc_html__( 'Unable to generate image from OpenAI', 'better-file-name' ) );

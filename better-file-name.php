@@ -6,7 +6,7 @@
  * Author:          Utkarsh
  * Author URI:      github.com/patelutkarsh
  * Text Domain:     better-file-name
- * Version:         1.5.0
+ * Version:         1.6.0
  * Requires PHP:    8.1
  * License:         GPL-2.0-or-later
  *
@@ -25,6 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
+}
+
+// Load Action Scheduler for async background processing (not autoloaded by Composer).
+$better_file_name_action_scheduler = __DIR__ . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
+if ( file_exists( $better_file_name_action_scheduler ) ) {
+	require_once $better_file_name_action_scheduler;
 }
 
 if ( ! class_exists( 'Better_File_Name_Ai\\Settings' ) ) {
